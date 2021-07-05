@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liraryyi.labRecordProject.calendar.dao.Calendar_remarkDao">
+
+    <select id="selectCalendarRemarkByCalendarId" resultType="Calendar_remark">
+        select * from tbl_calendar_remark where calendarId=#{calendarId}
+    </select>
+
+    <insert id="insertCalendarRemark">
+        insert into tbl_calendar_remark(
+        id,
+        noteContent,
+        createTime,
+        createBy,
+        editTime,
+        editBy,
+        editFlag,
+        calendarId
+        ) values (
+        #{id},
+        #{noteContent},
+        #{createTime},
+        #{createBy},
+        #{editTime},
+        #{editBy},
+        #{editFlag},
+        #{calendarId}
+        )
+    </insert>
+
+    <delete id="deleteRemarkById">
+        delete from tbl_calendar_remark where id=#{id}
+    </delete>
+
+    <update id="updateRemarkCalendar">
+        update tbl_calendar_remark set
+        noteContent = #{noteContent},
+        editTime = #{editTime},
+        editBy = #{editBy},
+        editFlag = #{editFalg}
+        where id=#{id}
+    </update>
+</mapper>
