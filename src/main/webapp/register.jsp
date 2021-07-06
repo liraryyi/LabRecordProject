@@ -24,7 +24,7 @@
 			$("#loginAct").val("");
 
 			//页面加载完毕后，让用户的文本框自动获得焦点
-			$("#loginAct").focus();
+			$("#email").focus();
 
 			//登录按钮绑定事件，进行登陆操作
 			$("#registerBtn").click(function (){
@@ -44,9 +44,16 @@
 
 			//账号，密码不能为空
 			//$.trim():去掉文本中的左右空格
+			var exp = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+			var email = $.trim($("#email").val());
 			var loginAct = $.trim($("#loginAct").val());
 			var loginPwd = $.trim($("#loginPwd").val());
 			var reLoginPwd = $.trim($("#reLoginPwd").val());
+
+			if (!exp.test(email)){
+				$("#msg").html("邮箱格式不正确");
+				return false;
+			}
 
 			if (loginAct == "" || loginPwd == ""){
 				$("#msg").html("账号密码不能为空");
@@ -70,6 +77,7 @@
 
 				url:"settings/user/register.do",
 				data :{
+					"email":email,
 					"loginAct":loginAct,
 					"loginPwd":loginPwd
 				},
@@ -82,7 +90,17 @@
 					 * {"success":true/false  , "msg":"错误的种类"}
 					 */
 					if (data.success){
-						window.location.href = "login.jsp";
+
+						var time=5;
+						var timer=setInterval(function(){
+							if(time==0){
+								window.location.href = "login.jsp";
+							}else{
+								$("#msg").html(data.msg);
+								time--;
+							}
+						},1000)
+
 					} else {
 						$("#msg").html(data.msg);
 					}
@@ -100,6 +118,10 @@
 			</div>
 			<form action="login.jsp" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
+					<div style="width: 350px;">
+						<input class="form-control" type="text" placeholder="注册邮箱" id="email">
+					</div>
+					<br/>
 					<div style="width: 350px;">
 						<input class="form-control" type="text" placeholder="用户名" id="loginAct">
 					</div>

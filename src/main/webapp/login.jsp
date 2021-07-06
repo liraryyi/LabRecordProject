@@ -75,6 +75,15 @@ request.getServerPort() + request.getContextPath() + "/";
 				}
 			})
 		}
+
+		//如果账号没有激活，点击重新激活
+		function show(){
+			var msg = $("#msg").val();
+			if (msg.match("激活")){
+				$("#reSendMail").css("display","inline");
+			}
+		}
+
 	</script>
 </head>
 <body>
@@ -96,8 +105,8 @@ request.getServerPort() + request.getContextPath() + "/";
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						
-							<span id="msg"></span>
-						
+							<span id="msg" style="color: #c7254e"></span>
+
 					</div>
 					<button type="button" id="submitBtn" class="btn btn-primary btn-lg btn-block"  style="width: 350px; position: relative;top: 45px;">登录</button>
 				</div>

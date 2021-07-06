@@ -1,16 +1,21 @@
 package com.liraryyi.labRecordProject.settings.controller;
 
+import com.alibaba.druid.stat.TableStat;
 import com.liraryyi.labRecordProject.exception.LoginException;
 import com.liraryyi.labRecordProject.settings.domain.User;
+import com.liraryyi.labRecordProject.settings.domain.VerificationCode;
 import com.liraryyi.labRecordProject.settings.service.UserService;
 import com.liraryyi.labRecordProject.utils.DateTimeUtil;
 import com.liraryyi.labRecordProject.utils.MD5Util;
 import com.liraryyi.labRecordProject.utils.PrintJson;
+import com.liraryyi.labRecordProject.utils.RandomCode;
 import com.liraryyi.labRecordProject.utils.UUIDUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
 
 @Controller
 @RequestMapping(value = "/settings")
@@ -30,24 +35,31 @@ public class UserController {
     @RequestMapping(value = "/user/register.do")
     public void registerUser(HttpServletRequest request, HttpServletResponse response){
 
-        System.out.println("controller start");
+        String email = request.getParameter("email");
         String loginAct = request.getParameter("loginAct");
         String loginPwd = request.getParameter("loginPwd");
         loginPwd = MD5Util.getMD5(loginPwd);
         String id = UUIDUtil.getUUID();
         String createTime = DateTimeUtil.getSysTime();
-        String lockState = "1";
+        String lockState = "0";
+        String code = RandomCode.getStringRandom(8);
 
         User user = new User();
         user.setId(id);
+        user.setEmail(email);
         user.setLoginAct(loginAct);
         user.setLoginPwd(loginPwd);
         user.setCreateTime(createTime);
         user.setLockState(lockState);
 
-        Map<String,Object> map = userService.register(user);
+        VerificationCode vc = new VerificationCode();
+        vc.setUserId(id);
+        vc.setCode(code);
+        vc.setCreateTime(DateTimeUtil.getSysTime());
+        vc.setExpiredTime(DateTimeUtil.getExpiredTime());
 
-        System.out.println("controll end");
+        Map<String,Object> map = userService.register(user,vc);
+
         PrintJson.printJsonObj(response,map);
     }
 
@@ -93,5 +105,35 @@ public class UserController {
 
             PrintJson.printJsonObj(response,map);
         }
+    }
+
+    @RequestMapping(value = "/user/activate.do")
+    public ModelAndView activate(String code){
+
+        //查看数据库中是否有该验证码的数据，并且没有过时
+        ModelAndView mv = new ModelAndView();
+
+        Map<String, String> map = userService.checkCode(code);
+
+        mv.addObject("userId",map.get("userId"));
+        mv.addObject("msg",map.get("msg"));
+        mv.setViewName("forward:/activate_result.jsp");
+        return mv;
+    }
+
+    @RequestMapping(value = "/user/repeatedMail.do")
+    public ModelAndView reSendMail(String userId){
+
+        //重发邮件需要考虑的事，更改验证码表，更换一个新的验证码并更新过期时间，然后发送邮件,成功后返回信息
+        ModelAndView mv = new ModelAndView();
+
+        System.out.println("userId");
+        System.out.println(userId);
+        Map<String,String> map = userService.reSendmail(userId);
+
+        mv.addObject("msg",map.get("msg"));
+        mv.addObject("userId",userId);
+        mv.setViewName("forward:/activate_result.jsp");
+        return mv;
     }
 }

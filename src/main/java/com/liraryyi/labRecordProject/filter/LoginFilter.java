@@ -35,7 +35,8 @@ public class LoginFilter implements Filter {
         String path = request.getServletPath();
 
         //正常登录的请求，放行
-        if ("/login.jsp".equals(path) || "/settings/user/login.do".equals(path) || "/register.jsp".equals(path) || "/settings/user/register.do".equals(path)) {
+        if ("/login.jsp".equals(path) || "/settings/user/login.do".equals(path) || "/register.jsp".equals(path)
+                || "/settings/user/register.do".equals(path) || "/settings/user/activate.do".equals(path) || "/settings/user/repeatedMail.do".equals(path)) {
 
             filterChain.doFilter(request, response);
 
