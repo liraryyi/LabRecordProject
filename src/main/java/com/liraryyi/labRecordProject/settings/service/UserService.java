@@ -15,4 +15,8 @@ public interface UserService {
     Map<String,String> checkCode(String code);
 
     Map<String,String> reSendmail(String userId);
+
+    Map<String,Object> updatePwd(Map<String,String> map);
+
+    Map<String, Object> savePhoto(String id,String imgData,String path);
 }

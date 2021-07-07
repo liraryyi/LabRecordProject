@@ -7,6 +7,7 @@ import com.liraryyi.labRecordProject.settings.domain.User;
 import com.liraryyi.labRecordProject.settings.domain.VerificationCode;
 import com.liraryyi.labRecordProject.settings.service.UserService;
 import com.liraryyi.labRecordProject.utils.DateTimeUtil;
+import com.liraryyi.labRecordProject.utils.PhotoSave;
 import com.liraryyi.labRecordProject.utils.RandomCode;
 import com.liraryyi.labRecordProject.utils.SendMail;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,7 +93,6 @@ public class UserServiceImpl implements UserService {
         return map;
     }
 
-
     public User login(String loginAct, String loginPwd, String ip) throws LoginException {
 
         /**
@@ -147,7 +148,6 @@ public class UserServiceImpl implements UserService {
                 System.out.println("日期转换这里格式有问题");
                 e.printStackTrace();
             }
-            System.out.println(expiredTime);
             if (nowDate.getTime() > expiredTime.getTime()){
                 //如果成立，说明过期了
                 msg = "验证码过期，请重新发邮件验证";
@@ -176,7 +176,8 @@ public class UserServiceImpl implements UserService {
         Map<String,String> map = new HashMap<>();
         //根据code找到验证码信息,更新过期时间以及验证码
         String msg = "";
-        VerificationCode vc = verificationCodeDao.selectCodeDomainByuserId(userId);
+        System.out.println(userId);
+        VerificationCode verificationCode = verificationCodeDao.selectByUserId(userId);
 
         String expiredTime = DateTimeUtil.getExpiredTime();
         String newCode = RandomCode.getStringRandom(8);
@@ -186,11 +187,11 @@ public class UserServiceImpl implements UserService {
             newCode = RandomCode.getStringRandom(8);
             count = verificationCodeDao.selectCode(newCode);
         }
-        vc.setCode(newCode);
-        vc.setExpiredTime(expiredTime);
+        verificationCode.setCode(newCode);
+        verificationCode.setExpiredTime(expiredTime);
 
         User user = userDao.selectUserByuserId(userId);
-        int count1 = verificationCodeDao.updateVC(vc);
+        int count1 = verificationCodeDao.updateVC(verificationCode);
         if (count1 != 1){
             msg = "发送失败";
         }else {
@@ -198,7 +199,7 @@ public class UserServiceImpl implements UserService {
             //重发邮件
             String mailText = "<html><head></head><body><h1>这是一封激活邮件,激活请点击以下链接</h1><h3>" +
                     "<a href='http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code="
-                    + vc.getCode() + "'>http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code=" + vc.getCode()
+                    + verificationCode.getCode() + "'>http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code=" + verificationCode.getCode()
                     + "</href></h3></body></html>";
             //使用多线程执行邮件的发送
             Thread threadSendMail = new Thread() {
@@ -211,6 +212,85 @@ public class UserServiceImpl implements UserService {
         }
 
         map.put("msg",msg);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> updatePwd(Map<String, String> map) {
+
+        Map<String,Object> map1 = new HashMap<>();
+        String msg = "";
+        boolean flag = true;
+
+        //先通过用户名找到用户
+        User user = userDao.selectUser_ByLoginAck(map.get("loginAct"));
+        if (user != null){
+
+            //找到用户之后，判断旧密码是否正确
+            String loginPwd = user.getLoginPwd();
+            if (!map.get("oldPwd").equals(loginPwd)){
+
+                msg = "旧密码输入错误";
+                flag = false;
+            }else {
+                //修改密码
+                int count = userDao.updatePwd(map);
+                if (count != 1) {
+
+                    //修改失败
+                    msg = "密码修改失败";
+                    flag = false;
+                } else {
+
+                    //修改成功
+                    msg = "密码修改成功,3秒后自动关闭窗口";
+                }
+            }
+        }else {
+            //找不到用户
+            msg ="用户名错误";
+            flag = false;
+        }
+
+
+        map1.put("msg",msg);
+        map1.put("flag",flag);
+        return map1;
+    }
+
+    @Override
+    public Map<String, Object> savePhoto(String id, String imgData, String path) {
+
+        String msg = "";
+        boolean flag = true;
+        String imgPath = "";
+        Map<String,Object> map = new HashMap<>();
+
+        String pictureName = id + "_head.png";
+        //头像存盘
+        try {
+            PhotoSave.decodeBase64DataURLToImage(imgData,path,pictureName);
+        } catch (IOException e) {
+            System.out.println("图片存储失败");
+            e.printStackTrace();
+        }
+
+        User user = new User();
+        user.setId(id);
+        user.setPath(path);
+        //修改数据库头像路径
+        int count = userDao.updatePath(user);
+        if (count != 1){
+            msg = "存储失败";
+            flag = false;
+        }else {
+            imgPath = path + "/"+pictureName;
+            msg = "存储成功";
+        }
+
+        map.put("imgPath",imgPath);
+        map.put("msg",msg);
+        map.put("flag",flag);
         return map;
     }
 }

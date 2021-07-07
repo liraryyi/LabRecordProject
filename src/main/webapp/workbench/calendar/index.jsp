@@ -414,6 +414,7 @@ request.getServerPort() + request.getContextPath() + "/";
 
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
+
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -457,146 +458,148 @@ request.getServerPort() + request.getContextPath() + "/";
 	</div>
 </nav>
 
-	<!-- 创建日历活动的模态窗口 -->
-	<div class="modal fade" id="createCalendarModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 85%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel1">创建日历计划</h4>
-				</div>
-				<div class="modal-body">
-				
-					<form class="form-horizontal" role="form" id="CalendarAddForm">
-					
-						<div class="form-group">
-							<label for="create-calendarOwner" class="col-sm-2 control-label">用户名<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-calendarOwner">
-							</div>
-                            <label for="create-calendarName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
-                            <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="create-calendarName">
-                            </div>
-						</div>
-
-						<%--<div class="form-group">
-							<label for="create-group" class="col-sm-2 control-label">分组</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control start_time" id="create-group">
-							</div>
-						</div>--%>
-						
-						<div class="form-group">
-							<label for="create-startDate" class="col-sm-2 control-label">开始日期</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control start_time" id="create-startDate"  readonly="readonly" placeholder="请直接点击选择时间(默认为今天)">
-							</div>
-							<label for="create-endDate" class="col-sm-2 control-label">结束日期</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control end_time" id="create-endDate" readonly="readonly" placeholder="请直接点击选择时间">
-							</div>
-						</div>
-                        <div class="form-group">
-
-                            <label for="create-colordemo" class="col-sm-2 control-label">颜色</label>
-                            <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="create-colordemo" style="background-color: #ff0000" value="#ff0000" placeholder="点击可以选择颜色(默认为红色)" readonly >
-								<span id="create-color"></span>
-                            </div>
-							<label for="create-url" class="col-sm-2 control-label">URL</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-url" >
-							</div>
-                        </div>
-
-						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
-							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
-							</div>
-						</div>
-						
-					</form>
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<!-- 修改日历活动的模态窗口 -->
-	<div class="modal fade" id="editCalendarModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 85%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel2">修改日历计划</h4>
-				</div>
-				<div class="modal-body">
-				
-					<form class="form-horizontal" role="form" id="CalendarEditForm">
-					
-						<div class="form-group">
-							<label for="edit-calendarOwner" class="col-sm-2 control-label">用户名<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-calendarOwner">
-							</div>
-                            <label for="edit-calendarName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
-                            <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-calendarName">
-                            </div>
-						</div>
-
-						<div class="form-group">
-							<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control start_time" id="edit-startDate">
-							</div>
-							<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control end_time" id="edit-endDate">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="edit-colordemo" class="col-sm-2 control-label">颜色</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-colordemo" value="" placeholder="点击可以选择颜色" readonly >
-								<span id="edit-color"></span>
-							</div>
-							<label for="edit-url" class="col-sm-2 control-label">URL</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-url">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="edit-description" class="col-sm-2 control-label">描述</label>
-							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-description"></textarea>
-							</div>
-						</div>
-						
-					</form>
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" id="edit-updateBtn">更新</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="jumbotron">
+
+		<!-- 创建日历活动的模态窗口 -->
+		<div class="modal fade" id="createCalendarModal" role="dialog">
+			<div class="modal-dialog" role="document" style="width: 85%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel1">创建日历计划</h4>
+					</div>
+					<div class="modal-body">
+
+						<form class="form-horizontal" role="form" id="CalendarAddForm">
+
+							<div class="form-group">
+								<label for="create-calendarOwner" class="col-sm-2 control-label">用户名<span style="font-size: 15px; color: red;">*</span></label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="create-calendarOwner">
+								</div>
+								<label for="create-calendarName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="create-calendarName">
+								</div>
+							</div>
+
+							<%--<div class="form-group">
+                                <label for="create-group" class="col-sm-2 control-label">分组</label>
+                                <div class="col-sm-10" style="width: 300px;">
+                                    <input type="text" class="form-control start_time" id="create-group">
+                                </div>
+                            </div>--%>
+
+							<div class="form-group">
+								<label for="create-startDate" class="col-sm-2 control-label">开始日期</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control start_time" id="create-startDate"  readonly="readonly" placeholder="请直接点击选择时间(默认为今天)">
+								</div>
+								<label for="create-endDate" class="col-sm-2 control-label">结束日期</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control end_time" id="create-endDate" readonly="readonly" placeholder="请直接点击选择时间">
+								</div>
+							</div>
+							<div class="form-group">
+
+								<label for="create-colordemo" class="col-sm-2 control-label">颜色</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="create-colordemo" style="background-color: #ff0000" value="#ff0000" placeholder="点击可以选择颜色(默认为红色)" readonly >
+									<span id="create-color"></span>
+								</div>
+								<label for="create-url" class="col-sm-2 control-label">URL</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="create-url" >
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="create-describe" class="col-sm-2 control-label">描述</label>
+								<div class="col-sm-10" style="width: 81%;">
+									<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								</div>
+							</div>
+
+						</form>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 修改日历活动的模态窗口 -->
+		<div class="modal fade" id="editCalendarModal" role="dialog">
+			<div class="modal-dialog" role="document" style="width: 85%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel2">修改日历计划</h4>
+					</div>
+					<div class="modal-body">
+
+						<form class="form-horizontal" role="form" id="CalendarEditForm">
+
+							<div class="form-group">
+								<label for="edit-calendarOwner" class="col-sm-2 control-label">用户名<span style="font-size: 15px; color: red;">*</span></label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="edit-calendarOwner">
+								</div>
+								<label for="edit-calendarName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="edit-calendarName">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control start_time" id="edit-startDate">
+								</div>
+								<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control end_time" id="edit-endDate">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="edit-colordemo" class="col-sm-2 control-label">颜色</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="edit-colordemo" value="" placeholder="点击可以选择颜色" readonly >
+									<span id="edit-color"></span>
+								</div>
+								<label for="edit-url" class="col-sm-2 control-label">URL</label>
+								<div class="col-sm-10" style="width: 300px;">
+									<input type="text" class="form-control" id="edit-url">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="edit-description" class="col-sm-2 control-label">描述</label>
+								<div class="col-sm-10" style="width: 81%;">
+									<textarea class="form-control" rows="3" id="edit-description"></textarea>
+								</div>
+							</div>
+
+						</form>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" id="edit-updateBtn">更新</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	<div>
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">

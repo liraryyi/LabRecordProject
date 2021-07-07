@@ -11,7 +11,7 @@
     </select>
 
     <select id="selectUserByuserId" resultType="User">
-        select * from tbl_user where userId=#{userId}
+        select * from tbl_user where id=#{userId}
     </select>
 
     <insert id="insertUser">
@@ -43,11 +43,24 @@
     </insert>
 
     <select id="loginUser" resultType="User">
-        <!--这里传入的是一个map ，#{}里应该写key的部分 -->
         select * from tbl_user where loginAct = #{loginAct} and loginPwd = #{loginPwd}
     </select>
 
     <update id="updateLockState">
         update tbl_user set lockState="1" where id = #{id}
+    </update>
+
+    <update id="updatePwd">
+        update tbl_user set
+        loginPwd = #{newPwd}
+        where loginAct = #{loginAct}
+    </update>
+
+    <select id="selectUser_ByLoginAck" resultType="User">
+        select * from tbl_user where loginAct=#{loginAct}
+    </select>
+
+    <update id="updatePath">
+        update tbl_user set path=#{path} where id=#{id}
     </update>
 </mapper>

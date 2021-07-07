@@ -29,7 +29,7 @@
 </head>
 <body>
 <h1>${msg}</h1>
-<p><a id="reSendMail" style="display: none;" href="settings/user/repeatedMail.do?code='${userId}'">点击重发邮件</a></p>
-<p><a id="login" style="display: none;" href="login.jsp">点击进入登录页面</a></p>
+<p><a id="reSendMail" style="display: none;" href="settings/user/repeatedMail.do?userId=${userId}">点击重发邮件</a></p>
+<p><a id="login" style="display: none;" href="login/login.jsp">点击进入登录页面</a></p>
 </body>
 </html>

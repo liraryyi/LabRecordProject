@@ -35,8 +35,7 @@ public class LoginFilter implements Filter {
         String path = request.getServletPath();
 
         //正常登录的请求，放行
-        if ("/login.jsp".equals(path) || "/settings/user/login.do".equals(path) || "/register.jsp".equals(path)
-                || "/settings/user/register.do".equals(path) || "/settings/user/activate.do".equals(path) || "/settings/user/repeatedMail.do".equals(path)) {
+        if (  path.contains("login") || path.contains("user")) {
 
             filterChain.doFilter(request, response);
 
@@ -46,7 +45,7 @@ public class LoginFilter implements Filter {
             if (session.getAttribute("user") == null) {
 
                 //非法请求，直接跳转到登陆界面(重定向)
-                String serverPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/login.jsp";
+                String serverPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/login/login.jsp";
                 response.sendRedirect(serverPath);
 
             } else {
@@ -56,6 +55,7 @@ public class LoginFilter implements Filter {
             }
         }
     }
+
     @Override
     public void destroy() {
             //释放资源

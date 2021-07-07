@@ -17,5 +17,6 @@ public class User {
     private String createTime;
     private String editTime;
     private String editBy;
+    private String path;
 
 }

@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +118,7 @@ public class UserController {
 
         mv.addObject("userId",map.get("userId"));
         mv.addObject("msg",map.get("msg"));
-        mv.setViewName("forward:/activate_result.jsp");
+        mv.setViewName("forward:/login/activate_result.jsp");
         return mv;
     }
 
@@ -127,13 +128,54 @@ public class UserController {
         //重发邮件需要考虑的事，更改验证码表，更换一个新的验证码并更新过期时间，然后发送邮件,成功后返回信息
         ModelAndView mv = new ModelAndView();
 
-        System.out.println("userId");
-        System.out.println(userId);
         Map<String,String> map = userService.reSendmail(userId);
 
         mv.addObject("msg",map.get("msg"));
         mv.addObject("userId",userId);
-        mv.setViewName("forward:/activate_result.jsp");
+        mv.setViewName("forward:/login/activate_result.jsp");
         return mv;
+    }
+
+    @RequestMapping(value = "/user/quit.do")
+    public ModelAndView quit(HttpSession session){
+        ModelAndView mv = new ModelAndView();
+
+        session.invalidate();
+        mv.setViewName("redirect:/login/login.jsp");
+        return mv;
+    }
+
+    @RequestMapping(value = "/user/editPwd.do")
+    public void editPwd(HttpServletRequest request,HttpServletResponse response){
+
+        String loginAct = request.getParameter("loginAct");
+        String oldPwd = request.getParameter("oldPwd");
+        oldPwd = MD5Util.getMD5(oldPwd);
+        String newPwd = request.getParameter("newPwd");
+        newPwd = MD5Util.getMD5(newPwd);
+
+
+        Map<String,String> map = new HashMap<>();
+        map.put("loginAct",loginAct);
+        map.put("oldPwd",oldPwd);
+        map.put("newPwd",newPwd);
+
+        Map<String,Object> map2 = userService.updatePwd(map);
+
+        PrintJson.printJsonObj(response,map2);
+    }
+
+    @RequestMapping(value = "/user/savePhoto.do")
+    public void savePhoto(HttpServletRequest request,HttpServletResponse response){
+
+        String id = request.getParameter("id");
+        String imgData = request.getParameter("imgData");
+        String path = request.getSession().getServletContext().getRealPath("/image/userhead");
+        System.out.println(imgData);
+        System.out.println("111");
+
+
+        Map<String,Object> map = userService.savePhoto(id,imgData,path);
+        PrintJson.printJsonObj(response,map);
     }
 }

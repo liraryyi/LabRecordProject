@@ -10,7 +10,7 @@ public interface VerificationCodeDao {
 
     VerificationCode selectCodeDomain(String code);
 
-    VerificationCode selectCodeDomainByuserId(String userId);
+    VerificationCode selectByUserId(String userId);
 
     int updateVC(VerificationCode vc);
 }

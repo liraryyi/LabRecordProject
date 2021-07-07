@@ -24,7 +24,7 @@
         select * from tbl_verification_code where code=#{code}
     </select>
 
-    <select id="selectCodeDomainByuserId" resultType="VerificationCode">
+    <select id="selectByUserId" resultType="VerificationCode">
         select * from tbl_verification_code where userId=#{userId}
     </select>
 

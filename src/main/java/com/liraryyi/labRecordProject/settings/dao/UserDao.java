@@ -17,4 +17,10 @@ public interface UserDao {
     User loginUser(Map<String,String> map);
 
     int updateLockState(String id);
+
+    int updatePwd(Map<String,String> map);
+
+    User selectUser_ByLoginAck(String loginAct);
+
+    int updatePath(User user);
 }

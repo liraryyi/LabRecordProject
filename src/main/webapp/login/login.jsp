@@ -112,7 +112,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				</div>
 			</form>
 			<div class="page-header" style="width: 80px; height: 15px; position: relative ; top: 20px ;left: 250px">
-				<button type="button" class="btn-primary btn-lg btn-block" onclick="window.location.href = 'register.jsp'">注册</button>
+				<button type="button" class="btn-primary btn-lg btn-block" onclick="window.location.href = 'login/register.jsp'">注册</button>
 			</div>
 		</div>
 	</div>
