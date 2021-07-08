@@ -121,7 +121,7 @@ request.getServerPort() + request.getContextPath() + "/";
               <a href="#" class="dropdown-toggle"
                  data-toggle="dropdown"
                  style="height: 50px">
-                <img id="user-photo" alt="" src="" width="30px" height="30px"/>
+                <img id="user-photo" alt="" src="${user.path}" class="img-circle" style="width: 30px;height: 30px"/>
                 <span style="color: #000000;font-size: 15px">
                                 <i>${user.loginAct}</i>
                   </span>
@@ -130,7 +130,7 @@ request.getServerPort() + request.getContextPath() + "/";
                    style="background: #FFFFFF;width: 320px;overflow: hidden">
                 <div style="margin-top: 16px;border-bottom: 1px solid #eeeeee">
                   <div style="text-align: center">
-                    <img class="img-circle" src="image/efPictrue.PNG"
+                    <img class="img-circle" src="${user.path}"
                          style="width: 38px;height: 38px;"/>
                   </div>
                   <div style="color: #323534;text-align: center;line-height: 36px;font-size: 15px">
@@ -496,8 +496,8 @@ request.getServerPort() + request.getContextPath() + "/";
           dataType: 'json',
           success: function (data) {
             if (data.flag) {
-              // 将上传的头像的地址填入，为保证不载入缓存加个随机数
-              $('.user-photo').attr('src', data.imgPath+'?t=' + Math.random());
+              // 将上传的头像的地址填入
+              $('.img-circle').attr('src', data.imgPath);
               $('#changeModal').modal('hide');
             } else {
               alert(data.msg);

@@ -263,10 +263,10 @@ public class UserServiceImpl implements UserService {
 
         String msg = "";
         boolean flag = true;
-        String imgPath = "";
         Map<String,Object> map = new HashMap<>();
 
         String pictureName = id + "_head.png";
+        String imgPath = "image/userhead/" + pictureName +"?t=" + Math.random();
         //头像存盘
         try {
             PhotoSave.decodeBase64DataURLToImage(imgData,path,pictureName);
@@ -277,14 +277,13 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setId(id);
-        user.setPath(path);
+        user.setPath(imgPath);
         //修改数据库头像路径
         int count = userDao.updatePath(user);
         if (count != 1){
             msg = "存储失败";
             flag = false;
         }else {
-            imgPath = path + "/"+pictureName;
             msg = "存储成功";
         }
 
@@ -292,5 +291,10 @@ public class UserServiceImpl implements UserService {
         map.put("msg",msg);
         map.put("flag",flag);
         return map;
+    }
+
+    @Override
+    public User getUser(String id) {
+        return userDao.selectUserByuserId(id);
     }
 }

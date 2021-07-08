@@ -170,12 +170,16 @@ public class UserController {
 
         String id = request.getParameter("id");
         String imgData = request.getParameter("imgData");
-        String path = request.getSession().getServletContext().getRealPath("/image/userhead");
-        System.out.println(imgData);
-        System.out.println("111");
-
+        String path = request.getSession().getServletContext().getRealPath("/image/userhead/");
 
         Map<String,Object> map = userService.savePhoto(id,imgData,path);
+
+        //根据id找到user对象，并加入全局作用域
+        User user = userService.getUser(id);
+
+        //将用户加入到会话作用域对象(HttpSession),更新一下
+        request.getSession().setAttribute("user",user);
+
         PrintJson.printJsonObj(response,map);
     }
 }

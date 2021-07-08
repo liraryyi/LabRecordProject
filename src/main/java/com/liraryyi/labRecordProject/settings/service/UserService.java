@@ -19,4 +19,6 @@ public interface UserService {
     Map<String,Object> updatePwd(Map<String,String> map);
 
     Map<String, Object> savePhoto(String id,String imgData,String path);
+
+    User getUser(String id);
 }
