@@ -228,7 +228,7 @@ Monthly 2.2.2 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 			}
 
 			if(options.linkCalendarToEventUrl && eventURL) {
-				dayStartTag = "<a" + attr("href", eventURL);
+				dayStartTag = "<a" + attr("href", eventURL) + attr("target","_blank");
 				dayEndTags = "</span></a>";
 			}
 
@@ -237,13 +237,14 @@ Monthly 2.2.2 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 					+ attr("title", eventTitle)
 					// BG and FG colors must match for left box shadow to create seamless link between dates
 					+ (eventColor ? attr("style", "background:" + eventColor + ";color:" + eventColor) : ""),
-				markupListEvent = "<a"
-					+ attr("href", eventURL)
+				markupListEvent = "<a href=\"javascript:void(0);\" onclick='window.open(\""+eventURL+"\")'"
+					/*+ attr("href", eventURL)
+					+ attr("target","_blank")*/
 					+ attr("class", "listed-event" + customClass)
 					+ attr("data-eventid", eventId)
 					+ (eventColor ? attr("style", "background:" + eventColor) : "")
 					+ attr("title", eventTitle)
-					+ ">" + eventTitle + " " + timeHtml + "</a>";
+					+ ">" + eventTitle + " " + timeHtml + " " + eventURL +"</a>";
 			for(var index = startDayNumber; index <= endDayNumber; index++) {
 				var doShowTitle = index === showEventTitleOnDay;
 				// Add to calendar view
@@ -492,7 +493,7 @@ Monthly 2.2.2 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 		$(document.body).on("click", parent + " .listed-event", function (event) {
 			var href = $(this).attr("href");
 			// If there isn't a link, don't go anywhere
-			if(!href) {
+			if(!this.href) {
 				event.preventDefault();
 			}
 		});

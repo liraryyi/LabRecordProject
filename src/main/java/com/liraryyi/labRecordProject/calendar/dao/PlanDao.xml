@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liraryyi.labRecordProject.calendar.dao.PlanDao">
+
+    <insert id="insertPlan">
+        insert into tbl_plan (
+        id,
+        loginAct,
+        `name`,
+        `group`,
+        createTime,
+        createBy,
+        startDate,
+        endDate,
+        description,
+        ideaId
+        ) values (
+        #{id},
+        #{loginAct},
+        #{name},
+        #{group},
+        #{createTime},
+        #{createBy},
+        #{startDate},
+        #{endDate},
+        #{description},
+        #{ideaId}
+        )
+    </insert>
+
+    <select id="selectPlanCount" resultType="int">
+        select count(*)
+        from tbl_plan
+        <where>
+            <if test="name !=null and name !=''">
+                name like '%' #{name} '%'
+            </if>
+            <if test="loginAct !=null and loginAct !=''">
+                loginAct like '%' #{loginAct} '%'
+            </if>
+            <if test="group!=null and group !=''">
+                `group` like '%' #{group} '%'
+            </if>
+            <if test="startDate !=null and startDate !=''">
+                startDate &gt; #{startDate}
+            </if>
+            <if test="endDate!=null and endDate !=''">
+                endDate &lt; #{endDate}
+            </if>
+            <if test="description !=null and description !=''">
+                description like '%' #{description} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPlanList" resultType="Plan">
+        select
+        id,
+        loginAct,
+        `name`,
+        `group`,
+        startDate,
+        endDate,
+        description
+
+        from tbl_plan
+        <where>
+            <if test="name !=null and name !=''">
+                `name` like '%' #{name} '%'
+            </if>
+            <if test="loginAct !=null and loginAct !=''">
+                loginAct like '%' #{loginAct} '%'
+            </if>
+            <if test="group!=null and group !=''">
+                `group` like '%' #{group} '%'
+            </if>
+            <if test="startDate !=null and startDate !=''">
+                startDate &gt; #{startDate}
+            </if>
+            <if test="endDate!=null and endDate !=''">
+                endDate &lt; #{endDate}
+            </if>
+            <if test="description !=null and description !=''">
+                description like '%' #{description} '%'
+            </if>
+        </where>
+        order by createTime desc
+        limit #{skipCount} , #{pageSize}
+    </select>
+
+    <select id="selectPlanById" resultType="Plan">
+        select * from tbl_plan where id=#{id}
+    </select>
+
+    <update id="updatePlan">
+        update tbl_plan set
+        loginAct = #{loginAct},
+        `name` = #{name},
+        `group` = #{group},
+        startDate = #{startDate},
+        endDate = #{endDate},
+        description =#{description},
+        editTime = #{editTime},
+        editBy = #{editBy}
+        where id=#{id}
+    </update>
+
+    <delete id="deletePlanById">
+        delete from tbl_plan where id=#{id}
+    </delete>
+</mapper>

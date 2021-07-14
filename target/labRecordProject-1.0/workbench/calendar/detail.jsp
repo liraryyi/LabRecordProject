@@ -12,6 +12,14 @@ request.getServerPort() + request.getContextPath() + "/";
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 	<link href="jquery/bootStrap-colorpicker/css/bootstrap-colorpicker.css" type="text/css" rel="stylesheet">
+	<style type="text/css">
+		body {
+			font-family: Calibri;
+			background-color: #f0f0f0;
+			padding: 0em 1em;
+			overflow-x:hidden;
+		}
+	</style>
 
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
@@ -77,7 +85,8 @@ request.getServerPort() + request.getContextPath() + "/";
 				url:"workbench/calendar_remark/saveRemarkCalendar.do",
 				data :{
 					"noteContext": $("#remark").val(),
-					"calendarId": "${calendar.id}"
+					"calendarId": "${calendar.id}",
+					"headPath":"${user.path}"
 				},
 				type:"post",
 				dataType : "json",
@@ -241,12 +250,11 @@ request.getServerPort() + request.getContextPath() + "/";
 				var html ="";
 
 				$.each(data,function (i,n){
-
 					/*
                     javascript:void(0) 将超链接禁用，只能以触发事件的形式操作
                      */
 					html += '<div class="remarkDiv" style="height: 60px;">';
-					html += '<img title="zhangsan" src="image/efPictrue.PNG" style="width: 30px; height:30px;">';
+					html += '<img alt="" src="'+n.headPath+'" style="width: 30px; height:30px;">';
 					html += '<div style="position: relative; top: -40px; left: 40px;" >';
 					html += '<h5>'+n.noteContent+'</h5>';
 					html += '<font color="gray">日历计划</font> <font color="gray">-</font> <b>${calendar.name}</b> <small style="color: gray;"> '+(n.editFlag==1?n.editTime:n.createTime)+' 由'+(n.editFlag==1?n.editBy:n.createBy)+'</small>';
@@ -302,54 +310,9 @@ request.getServerPort() + request.getContextPath() + "/";
 </script>
 
 </head>
-<body scroll="no" style="overflow-x:hidden">
+<body>
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<!--1主页-->
-			<a class="navbar-brand" href="workbench/index.jsp">Project name</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<!--2-->
-				<li class="active"><a href="workbench/calendar/index.jsp">修改日历</a></li>
-				<!--3-->
-				<li><a href="#">About</a></li>
-				<!--4-->
-				<li><a href="#">Contact</a></li>
-				<!--5下拉框-->
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
-						<li role="separator" class="divider"></li>
-						<li class="dropdown-header">Nav header</li>
-						<li><a href="#">Separated link</a></li>
-						<li><a href="#">One more separated link</a></li>
-					</ul>
-				</li>
-			</ul>
-			<!--右边的3个-->
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="navbar/">Default</a></li>
-				<li><a href="navbar-static-top/">Static top</a></li>
-				<li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
-			</ul>
-		</div><!--/.nav-collapse -->
-	</div>
-</nav>
-
-	<!-- 修改市场活动备注的模态窗口 -->
+	<!-- 修改备注的模态窗口 -->
 	<div class="modal fade" id="editRemarkModal" role="dialog">
 		<%-- 备注的id --%>
 		<input type="hidden" id="remarkId">
@@ -445,7 +408,6 @@ request.getServerPort() + request.getContextPath() + "/";
 		</div>
 	</div>
 
-	<div class="jumbotron">
 	<!-- 返回按钮 -->
 	<div style="position: relative; top: 35px; left: 10px;">
 		<a href="javascript:void(0);" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left" style="font-size: 20px; color: #DDDDDD"></span></a>
@@ -458,7 +420,7 @@ request.getServerPort() + request.getContextPath() + "/";
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
 			<button type="button" class="btn btn-default" id="updateCalendarBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
@@ -529,6 +491,6 @@ request.getServerPort() + request.getContextPath() + "/";
 		</div>
 	</div>
 	<div style="height: 200px;"></div>
-	</div>
+
 </body>
 </html>

@@ -15,7 +15,8 @@
         editTime,
         editBy,
         editFlag,
-        calendarId
+        calendarId,
+        headPath
         ) values (
         #{id},
         #{noteContent},
@@ -24,7 +25,8 @@
         #{editTime},
         #{editBy},
         #{editFlag},
-        #{calendarId}
+        #{calendarId},
+        #{headPath}
         )
     </insert>
 

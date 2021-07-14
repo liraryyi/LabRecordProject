@@ -32,6 +32,13 @@ request.getServerPort() + request.getContextPath() + "/";
 		.tdDate {
 			width: 10%;
 		}
+
+		body {
+			font-family: Calibri;
+			background-color: #f0f0f0;
+			padding: 0em 1em;
+			overflow-x:hidden;
+		}
 	</style>
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
@@ -410,56 +417,7 @@ request.getServerPort() + request.getContextPath() + "/";
 	
 </script>
 </head>
-<body scroll="no" style="overflow-x:hidden">
-
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<!--1主页-->
-			<a class="navbar-brand" href="workbench/index.jsp">Project name</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<!--2-->
-				<li class="active"><a href="workbench/calendar/index.jsp">修改日历</a></li>
-				<!--3-->
-				<li><a href="#">About</a></li>
-				<!--4-->
-				<li><a href="#">Contact</a></li>
-				<!--5下拉框-->
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
-						<li role="separator" class="divider"></li>
-						<li class="dropdown-header">Nav header</li>
-						<li><a href="#">Separated link</a></li>
-						<li><a href="#">One more separated link</a></li>
-					</ul>
-				</li>
-			</ul>
-			<!--右边的3个-->
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="navbar/">Default</a></li>
-				<li><a href="navbar-static-top/">Static top</a></li>
-				<li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
-			</ul>
-		</div><!--/.nav-collapse -->
-	</div>
-</nav>
-
-	<div class="jumbotron">
-
+<body>
 		<!-- 创建日历活动的模态窗口 -->
 		<div class="modal fade" id="createCalendarModal" role="dialog">
 			<div class="modal-dialog" role="document" style="width: 85%;">
@@ -502,6 +460,7 @@ request.getServerPort() + request.getContextPath() + "/";
 									<input type="text" class="form-control end_time" id="create-endDate" readonly="readonly" placeholder="请直接点击选择时间">
 								</div>
 							</div>
+
 							<div class="form-group">
 
 								<label for="create-colordemo" class="col-sm-2 control-label">颜色</label>
@@ -599,11 +558,13 @@ request.getServerPort() + request.getContextPath() + "/";
 			</div>
 		</div>
 
-
 	<div>
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">
-				<h3>每日活动列表</h3>
+				<h3 style="text-align: center;
+			               font-size: 50px;
+			               text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);"
+				>Calendar List</h3>
 			</div>
 		</div>
 	</div>
@@ -644,7 +605,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control start_time" type="text" id="search-startDate"  />
+					  <input class="form-control start_time" type="text" id="search-startDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
@@ -687,10 +648,10 @@ request.getServerPort() + request.getContextPath() + "/";
 			<div style="height: 50px; position: relative;top: 30px;">
 				<div id="calendarPage"></div>
 			</div>
-			
+
 		</div>
-		
 	</div>
-	</div>
+
+
 </body>
 </html>

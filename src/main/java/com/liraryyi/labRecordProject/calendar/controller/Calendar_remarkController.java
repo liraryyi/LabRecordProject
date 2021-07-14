@@ -41,6 +41,7 @@ public class Calendar_remarkController {
         String id = UUIDUtil.getUUID();
         String noteContent = request.getParameter("noteContext");
         String calendarId = request.getParameter("calendarId");
+        String headPath = request.getParameter("headPath");
         String editFlag = "0";
         //创建时间为当前系统时间
         String createTime = DateTimeUtil.getSysTime();
@@ -54,6 +55,7 @@ public class Calendar_remarkController {
         map.put("editFlag",editFlag);
         map.put("createTime",createTime);
         map.put("createBy",createBy);
+        map.put("headPath",headPath);
 
         boolean success = calendar_remarkService.saveCalendarRemark(map);
 

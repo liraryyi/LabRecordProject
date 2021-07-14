@@ -1,6 +1,7 @@
 package com.liraryyi.labRecordProject.calendar.service.impl;
 
 import com.liraryyi.labRecordProject.calendar.dao.CalendarDao;
+import com.liraryyi.labRecordProject.calendar.dao.CalendarIdeaRelationDao;
 import com.liraryyi.labRecordProject.calendar.domain.Calendar;
 import com.liraryyi.labRecordProject.calendar.domain.Monthly;
 import com.liraryyi.labRecordProject.calendar.service.CalendarService;
@@ -127,5 +128,29 @@ public class CalendarServiceImpl implements CalendarService {
         }
 
         return flag;
+    }
+
+    @Override
+    public List<Calendar> getCalendarByIdeaId(String ideaId) {
+
+        List<Calendar> list = calendarDao.selectCalendarByIdeaId(ideaId);
+
+        return  list;
+    }
+
+    @Override
+    public List<Calendar> getCalendarByName(String ideaId, String name) {
+
+        List<Calendar> list = calendarDao.selectCalendarByName(ideaId,name);
+
+        return list;
+    }
+
+    @Override
+    public List<Calendar> getCalendarByName_Plan(String name) {
+
+        List<Calendar> list = calendarDao.selectCalendarByName_Plan(name);
+
+        return list;
     }
 }

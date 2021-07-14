@@ -1,5 +1,6 @@
 
 $(function(){
+
     //Cropper初始化
     initCropperInModal($('#photo'),$('#photoInput'),$('#changeModal'));
 
@@ -69,6 +70,18 @@ $(function(){
     })
 
 });
+
+//给所有的菜单项注册鼠标单击事件
+$(".liClass").click(function(){
+    //移除所有菜单项的激活状态
+    $(".liClass").removeClass("active");
+    //当前项目被选中
+    $(this).addClass("active");
+});
+
+$(".navbar-brand").click(function (){
+    $(".liClass").removeClass("active");
+})
 
 $(".dropdown").mouseover(function () {
     $(this).addClass("open");

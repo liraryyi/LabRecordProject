@@ -14,18 +14,6 @@ public class Calendar_remark {
     private String editBy;
     private String editFlag ;
     private String calendarId;
+    private String headPath;
 
-    @Override
-    public String toString() {
-        return "Calendar_remark{" +
-                "id='" + id + '\'' +
-                ", noteContent='" + noteContent + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", createBy='" + createBy + '\'' +
-                ", editTime='" + editTime + '\'' +
-                ", editBy='" + editBy + '\'' +
-                ", editFlag='" + editFlag + '\'' +
-                ", calendarId='" + calendarId + '\'' +
-                '}';
-    }
 }

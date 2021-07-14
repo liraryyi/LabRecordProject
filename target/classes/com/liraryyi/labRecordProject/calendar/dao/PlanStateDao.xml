@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liraryyi.labRecordProject.calendar.dao.PlanStateDao">
+
+    <insert id="insertState">
+        insert into tbl_plan_state (
+        id,
+        loginAct,
+        `name`,
+        createTime,
+        createBy,
+        startDate,
+        endDate,
+        description,
+        planId
+        ) values (
+        #{id},
+        #{loginAct},
+        #{name},
+        #{createTime},
+        #{createBy},
+        #{startDate},
+        #{endDate},
+        #{description},
+        #{planId}
+        )
+    </insert>
+
+    <select id="selectStateList" resultType="Plan_state">
+        select * from tbl_plan_state where planId=#{planId} order by startDate
+    </select>
+
+    <delete id="deleteById">
+        delete from tbl_plan_state where id=#{stateId}
+    </delete>
+</mapper>

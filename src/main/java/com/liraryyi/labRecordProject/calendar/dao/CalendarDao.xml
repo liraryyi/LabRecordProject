@@ -115,4 +115,57 @@
         description = #{description}
         where id = #{id}
     </update>
+
+    <select id="selectCalendarByIdeaId" resultType="Calendar">
+        select
+            r.id as id,
+            c.name,
+            c.startDate,
+            c.endDate,
+            c.loginAct
+        from tbl_calendar c
+        join tbl_calendar_idea_relation r
+        on c.id=r.calendarId
+        where r.ideaId=#{ideaId}
+    </select>
+
+    <select id="selectCalendarByName" resultType="Calendar">
+        select
+            id,
+            `name`,
+            startDate,
+            endDate,
+            loginAct
+        from tbl_calendar
+        where `name` like '%' #{name} '%' and id not in(
+        select calendarId from tbl_calendar_idea_relation where ideaId=#{ideaId}
+            )
+    </select>
+
+    <select id="selectCalendarByName_Plan" resultType="Calendar">
+        select
+            id,
+            `name`,
+            startDate,
+            endDate,
+            loginAct
+        from tbl_calendar
+        where `name` like '%' #{name} '%' and id not in(
+        select calendarId from tbl_state_calendar_relation
+            )
+    </select>
+
+    <select id="selectCalendarByStatId" resultType="Calendar">
+        select
+        r.id,
+        c.name,
+        c.loginAct,
+        c.startDate,
+        c.endDate
+        from tbl_calendar c
+        join tbl_state_calendar_relation r
+        on c.id=r.calendarId
+        where r.stateId=#{stateId}
+        order by c.startDate
+    </select>
 </mapper>

@@ -20,4 +20,10 @@ public interface CalendarService {
     Calendar getCalendarById(String id);
 
     boolean updateCalendar(Calendar calendar);
+
+    List<Calendar> getCalendarByIdeaId(String ideaId);
+
+    List<Calendar> getCalendarByName(String ideaId,String name);
+
+    List<Calendar> getCalendarByName_Plan(String name);
 }

@@ -31,29 +31,122 @@ request.getServerPort() + request.getContextPath() + "/";
 
   <body>
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
+  <!-- 修改密码的模态窗口 -->
+  <div class="modal fade" id="editPwdModal" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 70%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h4 class="modal-title">修改密码</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="oldPwd" class="col-sm-2 control-label">原密码</label>
+              <div class="col-sm-10" style="width: 300px;">
+                <input type="text" class="form-control" id="oldPwd" style="width: 200%;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="newPwd" class="col-sm-2 control-label">新密码</label>
+              <div class="col-sm-10" style="width: 300px;">
+                <input type="text" class="form-control" id="newPwd" style="width: 200%;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPwd" class="col-sm-2 control-label">确认密码</label>
+              <div class="col-sm-10" style="width: 300px;">
+                <input type="text" class="form-control" id="confirmPwd" style="width: 200%;">
+              </div>
+            </div>
+            <div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
+
+              <span id="msg" style="color: #c7254e"></span>
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="updatePwdBtn">更新</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--更换头像的模态窗口-->
+  <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title text-primary">
+            <i class="fa fa-pencil"></i>
+            更换头像
+          </h4>
+        </div>
+        <div class="modal-body">
+          <p class="tip-info text-center">
+            未选择图片
+          </p>
+          <div class="img-container hidden">
+            <img src="" alt="" id="photo">
+          </div>
+          <div class="img-preview-box hidden">
+            <hr>
+            <span>150*150:</span>
+            <div class="img-preview img-preview-lg">
+            </div>
+            <span>100*100:</span>
+            <div class="img-preview img-preview-md">
+            </div>
+            <span>30*30:</span>
+            <div class="img-preview img-preview-sm">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <label class="btn btn-danger pull-left" for="photoInput">
+            <input type="file" class="sr-only" id="photoInput" accept="image/*">
+            <span>打开图片</span>
+          </label>
+          <button class="btn btn-primary disabled" disabled="true" onclick="sendPhoto();">提交</button>
+          <button class="btn btn-close" aria-hidden="true" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!--导航栏-->
+    <div style="height: 50px;width: 100%;">
+        <!-- 导航 -->
+      <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed liClass" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
           <!--1主页-->
-          <a class="navbar-brand" href="workbench/index.jsp">Project name</a>
+          <a class="navbar-brand" href="workbench/calendar/calendar.jsp" target="workareaFrame">My calendar</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <!--2-->
-            <li class="active"><a href="workbench/calendar/index.jsp">修改日历</a></li>
+            <li class="liClass"><a href="workbench/calendar/index.jsp" target="workareaFrame">calendar</a></li>
             <!--3-->
-            <li><a href="#">About</a></li>
+            <li class="liClass"><a href="workbench/idea/index.jsp" target="workareaFrame">idea</a></li>
             <!--4-->
-            <li><a href="#">Contact</a></li>
+            <li class="liClass"><a href="workbench/plan/index.jsp" target="workareaFrame">plan</a></li>
             <!--5下拉框-->
-            <li class="dropdown">
+            <li class="dropdown liClass">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
@@ -68,9 +161,9 @@ request.getServerPort() + request.getContextPath() + "/";
           </ul>
           <!--右边的3个-->
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="navbar/">Default</a></li>
+            <%--<li><a href="navbar/">Default</a></li>
             <li><a href="navbar-static-top/">Static top</a></li>
-            <li><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+            <li><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>--%>
 
             <!--用户图标-->
             <li class="dropdown" style="float: right">
@@ -96,7 +189,7 @@ request.getServerPort() + request.getContextPath() + "/";
                          style="width: 38px;height: 38px;"/>
                   </div>
                   <div style="color: #323534;text-align: center;line-height: 36px;font-size: 15px">
-                    <span>username</span>
+                    <span>${user.loginAct}</span>
                   </div>
                 </div>
 
@@ -151,114 +244,17 @@ request.getServerPort() + request.getContextPath() + "/";
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+    </div>
 
-    <div class="container">
-
-<!--      &lt;!&ndash; Main component for a primary marketing message or call to action &ndash;&gt;
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>-->
-      <div class="jumbotron">
-
-        <!-- 修改密码的模态窗口 -->
-        <div class="modal fade" id="editPwdModal" role="dialog">
-          <div class="modal-dialog" role="document" style="width: 70%;">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">×</span>
-                </button>
-                <h4 class="modal-title">修改密码</h4>
-              </div>
-              <div class="modal-body">
-                <form class="form-horizontal" role="form">
-                  <div class="form-group">
-                    <label for="oldPwd" class="col-sm-2 control-label">原密码</label>
-                    <div class="col-sm-10" style="width: 300px;">
-                      <input type="text" class="form-control" id="oldPwd" style="width: 200%;">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="newPwd" class="col-sm-2 control-label">新密码</label>
-                    <div class="col-sm-10" style="width: 300px;">
-                      <input type="text" class="form-control" id="newPwd" style="width: 200%;">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="confirmPwd" class="col-sm-2 control-label">确认密码</label>
-                    <div class="col-sm-10" style="width: 300px;">
-                      <input type="text" class="form-control" id="confirmPwd" style="width: 200%;">
-                    </div>
-                  </div>
-                  <div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
-
-                    <span id="msg" style="color: #c7254e"></span>
-
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="updatePwdBtn">更新</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--更换头像的模态窗口-->
-        <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title text-primary">
-                  <i class="fa fa-pencil"></i>
-                  更换头像
-                </h4>
-              </div>
-              <div class="modal-body">
-                <p class="tip-info text-center">
-                  未选择图片
-                </p>
-                <div class="img-container hidden">
-                  <img src="" alt="" id="photo">
-                </div>
-                <div class="img-preview-box hidden">
-                  <hr>
-                  <span>150*150:</span>
-                  <div class="img-preview img-preview-lg">
-                  </div>
-                  <span>100*100:</span>
-                  <div class="img-preview img-preview-md">
-                  </div>
-                  <span>30*30:</span>
-                  <div class="img-preview img-preview-sm">
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <label class="btn btn-danger pull-left" for="photoInput">
-                  <input type="file" class="sr-only" id="photoInput" accept="image/*">
-                  <span>打开图片</span>
-                </label>
-                <button class="btn btn-primary disabled" disabled="true" onclick="sendPhoto();">提交</button>
-                <button class="btn btn-close" aria-hidden="true" data-dismiss="modal">取消</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    <div class="jumbotron" style="position: absolute;top: 50px; bottom: 0px; left: 0px; right: 0px; overflow: auto">
+      <!-- 工作区 -->
+      <div id="workarea" style="position: absolute; top : 0px; left: 0px; width: 100%; height: 100%;">
+        <iframe style="border-width: 0px; width: 100%; height: 100%;" name="workareaFrame"></iframe>
       </div>
 
-    </div> <!-- /container -->
+    </div>
 
+  </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -272,6 +268,10 @@ request.getServerPort() + request.getContextPath() + "/";
     <script type="text/javascript" src="js/monthly.js"></script>
 
     <script type="text/javascript" src="js/template.js"></script>
-
+    <script type="text/javascript">
+      $(function (){
+        window.open("workbench/calendar/calendar.jsp","workareaFrame");
+      })
+    </script>
   </body>
 </html>
