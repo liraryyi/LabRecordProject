@@ -94,7 +94,7 @@
 						var time=5;
 						var timer=setInterval(function(){
 							if(time==0){
-								window.location.href = "login.jsp";
+								window.location.href = "login/login.jsp";
 							}else{
 								$("#msg").html(data.msg);
 								time--;

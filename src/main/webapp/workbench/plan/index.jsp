@@ -41,309 +41,6 @@ request.getServerPort() + request.getContextPath() + "/";
 	}
 </style>
 
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-	<!--分页查询的插件-->
-	<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
-	<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
-
-<script type="text/javascript">
-
-	$(function(){
-
-		pageList(1,10);
-
-		//为创建按钮绑定事件，点击打开创建线索的模态窗口
-		$("#addBtn").click(function (){
-
-			var loginAct = "${user.loginAct}";
-
-			$("#create-PlanLoginAct").val(loginAct);
-
-			$("#createPlanModal").modal("show");
-		})
-
-		//为保存按钮绑定事件，点击将已经填写好的数据保存到数据库中
-		$("#saveBtn").click(function (){
-
-			$.ajax({
-
-				url:"workbench/plan/saveplan.do",
-				data :{
-
-					"loginAct":$.trim($("#create-PlanLoginAct").val()),
-					"name":$.trim($("#create-PlanName").val()),
-					"group":$.trim($("#create-PlanGroup").val()),
-					"startDate":$.trim($("#create-PlanStartDate").val()),
-					"endDate":$.trim($("#create-PlanEndDate").val()),
-					"description":$.trim($("#create-PlanDescription").val()),
-
-				},
-				type:"post",
-				dataType : "json",
-				success :function (data){
-					if (data.success){
-						pageList(1,10);
-						$("#createIdeaModal").modal("hide");
-					}else {
-						alert("保存失败")
-					}
-				}
-			})
-		})
-
-		//为搜索按钮绑定事件，点击查询
-		$("#searchBtn").click(function (){
-			//先把搜索框中的信息保存到隐藏域中
-			$("#hidden-PlanName").val($.trim($("#search-PlanName").val()));
-			$("#hidden-PlanLoginAct").val($.trim($("#search-PlanLoginAct").val()));
-			$("#hidden-PlanGroup").val($.trim($("#search-PlanGroup").val()));
-			$("#hidden-PlanStartDate").val($.trim($("#search-PlanStartDate").val()));
-			$("#hidden-PlanEndDate").val($.trim($("#search-PlanEndDate").val()));
-			$("#hidden-PlanDescription").val($.trim($("#search-PlanDescription").val()));
-
-			pageList(1,10);
-		})
-
-		$(".start_time").datetimepicker({
-			//格式化：年月日时分秒
-			format: 'yyyy-mm-dd hh:ii',
-			//	选择后自动关闭
-			autoclose: true,
-			//	分钟的步长
-			minuteStep: 1,
-			//	语言
-			language: 'zh-CN',
-			//	显示今天按钮
-			todayBtn: true,
-			//	层级
-			bootcssVer: 3,
-		}).on('changeDate', function (e) {
-			var startDate = $('.start_time').val();
-			$(".end_time").datetimepicker('setStartDate', startDate);
-			$(".start_time").datetimepicker('hide');
-		});
-		$('.end_time').datetimepicker({
-			format: 'yyyy-mm-dd hh:ii',
-			autoclose: true,
-			minuteStep: 1,
-			language: 'zh-CN',
-			todayBtn: true,
-			bootcssVer: 3,
-		}).on('changeDate', function (e) {
-			var returnDate = $(".end_time").val();
-			$(".start_time").datetimepicker('setReturnDate', returnDate);
-			$(".end_time").datetimepicker('hide');
-		});
-
-		//为selectBox选择框绑定事件，点击全选下面的选择框
-		$("#selectBox").click(function (){
-			$("input[name = subSelectBox]").prop("checked",this.checked);
-		})
-
-		$("#tbodyContext").on("click",$("input[name = subSelectBox]"),function (){
-
-			$("#selectBox").prop("checked",$("input[name = subSelectBox]").length == $("input[name = subSelectBox]:checked").length);
-		})
-
-		//为”修改“按钮绑定事件，点击打开模态窗口
-		$("#updateBtn").click(function (){
-
-			//修改时应该只能修改选中的唯一一个复选框的信息
-			var $xz = $("input[name = subSelectBox]:checked");
-			if ($xz.length == 0){
-				alert("请选择您想修改的活动")
-			}else if ($xz.length > 1){
-				alert("不能同时修改多个活动的信息")
-			}else {
-
-				$.ajax({
-
-					url:"workbench/plan/getPlan.do",
-					data :{
-						"id": $xz.val(),
-					},
-					type:"get",
-					dataType : "json",
-					success :function (data){
-
-						$("#edit-PlanLoginAct").val(data.loginAct);
-						$("#edit-PlanName").val(data.name);
-						$("#edit-PlanGroup").val(data.group);
-						$("#edit-PlanStartDate").val(data.startDate);
-						$("#edit-PlanEndDate").val(data.endDate);
-						$("#edit-PlanDescription").val(data.description);
-					}
-				})
-
-				$("#editPlanModal").modal("show");
-			}
-		})
-
-		//为更新按钮绑定事件，点击将已经修改的信息保存到数据库中
-		$("#edit-updateBtn").click(function (){
-
-			var $xz = $("input[name = subSelectBox]:checked");
-			$.ajax({
-
-				url:"workbench/plan/updatePlan.do",
-				data :{
-					"id":$xz.val(),
-					"loginAct":$.trim($("#edit-PlanLoginAct").val()),
-					"name":$.trim($("#edit-PlanName").val()),
-					"group": $.trim($("#edit-PlanGroup").val()),
-					"startDate":$.trim($("#edit-PlanStartDate").val()),
-					"endDate":$.trim($("#edit-PlanEndDate").val()),
-					"description":$.trim($("#edit-PlanDescription").val())
-				},
-				type:"post",
-				dataType : "json",
-				success :function (data){
-
-					//传过来的数据success
-					if (data.success){
-						$("#ideaEditForm")[0].reset();
-
-						$("#editPlanModal").modal("hide");
-
-						pageList($("#planPage").bs_pagination('getOption', 'currentPage')
-								,$("#planPage").bs_pagination('getOption', 'rowsPerPage'));
-					}else {
-						alert("保存失败")
-					}
-				}
-			})
-		})
-
-		//为delete按钮绑定事件，点击按复选框（subSelectBox）的checked状态删除查询数据
-		$("#deleteBtn").click(function (){
-
-			//找到复选框中所有checked的jquery对象
-			var $xz = $("input[name = subSelectBox]:checked");
-
-			if ($xz.length == 0){
-				alert("请选择需要删除的记录");
-			}else {
-
-				var param = "";
-
-				//遍历$xz中的每一个dom对象遍历出来，取其value值》取得需要删除的记录的id
-				for (var i = 0; i < $xz.length; i++) {
-
-					param += "id=" + $($xz[i]).val();
-					if (i < $xz.length - 1){
-						param += "&"
-					}
-				}
-
-				if (confirm("是否打算删除该数据")){
-					$.ajax({
-
-						url:"workbench/plan/deletePlan.do",
-						data : param,
-						type:"post",
-						dataType : "json",
-						success :function (data){
-							//需要传递出来的信息：success：true or false
-							if (data.success){
-								//删除成功后刷新当前页
-
-								pageList($("#ideaPage").bs_pagination('getOption', 'currentPage')
-										,$("#ideaPage").bs_pagination('getOption', 'rowsPerPage'));
-							}else {
-								alert("数据删除失败")
-							}
-						}
-					})
-				}
-			}
-		})
-
-	});
-
-	function pageList(pageNo,pageSize){
-
-		//搜索前将隐藏域中的值赋给搜索框
-		$("#search-PlanName").val($.trim($("#hidden-PlanName").val()));
-		$("#search-PlanLoginAct").val($.trim($("#hidden-PlanLoginAct").val()));
-		$("#search-PlanGroup").val($.trim($("#hidden-PlanGroup").val()));
-		$("#search-PlanStartDate").val($.trim($("#hidden-PlanStartDate").val()));
-		$("#search-PlanEndDate").val($.trim($("#hidden-PlanEndDate").val()));
-		$("#search-PlanDescription").val($.trim($("#hidden-PlanDescription").val()));
-
-		$.ajax({
-
-			url:"workbench/plan/getPlanList.do",
-			data :{
-				//传参--做分页的相关参数
-				"pageNo":pageNo,
-				"pageSize":pageSize,
-				//传参--线索列表
-				"name":$.trim($("#search-PlanName").val()),
-				"loginAct":$.trim($("#search-PlanLoginAct").val()),
-				"group":$.trim($("#search-PlanGroup").val()),
-				"startDate":$.trim($("#search-PlanStartDate").val()),
-				"endDate":$.trim($("#search-PlanEndDate").val()),
-				"description":$.trim($("#search-PlanDescription").val()),
-			},
-			type:"post",
-			dataType : "json",
-			success :function (data){
-
-				/**
-				 * 前端需要的参数：市场活动信息列表
-				 * {{市场活动1}，{2}，{3}}
-				 * 一会分页插件需要的，查询出来的总记录数
-				 * {“total”：100}
-				 * {“total：100，“datalist”：[{市场活动1}，{2}，{3}]}
-				 */
-
-				var html ="";
-
-				$.each(data.list,function (i,n){
-					html +='<tr>';
-					html +='<td><input value="'+n.id+'" name="subSelectBox" type="checkbox"/></td>';
-					html +='<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/plan/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
-					html +='<td>'+n.loginAct+'</td>';
-					html +='<td>'+n.group+'</td>';
-					html +='<td>'+n.description+'</td>';
-					html +='<td>'+n.startDate+'</td>';
-					html +='<td>'+n.endDate+'</td>';
-					html +='</tr>';
-				})
-
-				$("#tbodyContext").html(html);
-
-				//计算总页数
-				var totalPages = data.total%pageSize ==0?data.total/pageSize:data.total/pageSize+1;
-
-				//分页组件
-				$("#planPage").bs_pagination({
-					currentPage: pageNo, // 页码
-					rowsPerPage: pageSize, // 每页显示的记录条数
-					maxRowsPerPage: 20, // 每页最多显示的记录条数
-					totalPages: totalPages, // 总页数》需要计算
-					totalRows: data.total, // 总记录条数
-
-					visiblePageLinks: 3, // 显示几个卡片
-
-					showGoToPage: true,
-					showRowsPerPage: true,
-					showRowsInfo: true,
-					showRowsDefaultInfo: true,
-
-					//回调函数在点击分页组件的时候触发
-					onChangePage : function(event, data){
-						pageList(data.currentPage , data.rowsPerPage);
-					}
-				});
-			}
-		})
-	}
-	
-</script>
 </head>
 <body>
 
@@ -517,8 +214,9 @@ request.getServerPort() + request.getContextPath() + "/";
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">
 				<h3 style="text-align: center;
-			               font-size: 50px;
-			               text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);">Plan List</h3>
+			               font-size: 35px;
+			               text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);">Plan List
+				<small>&nbsp;您可以用一个计划管理之前记录的日历活动</small></h3>
 			</div>
 		</div>
 	</div>
@@ -539,8 +237,8 @@ request.getServerPort() + request.getContextPath() + "/";
 
 					<div class="form-group">
 						<div class="input-group">
-							<div class="input-group-addon">用户名</div>
-							<input class="form-control" type="text" id="search-PlanLoginAct">
+							<div class="input-group-addon hidden">用户名</div>
+							<input class="form-control hidden" type="text" id="search-PlanLoginAct" value="${user.loginAct}">
 						</div>
 					</div>
 				  
@@ -613,7 +311,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				  </div>
 
 
-				  <button type="button" class="btn btn-default" id="searchBtn">查询</button>
+				  <button type="button" class="btn btn-success" id="searchBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -653,6 +351,313 @@ request.getServerPort() + request.getContextPath() + "/";
 		
 	</div>
 
+
+
+
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<!--分页查询的插件-->
+	<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
+
+	<script type="text/javascript">
+
+		$(function(){
+
+			pageList(1,10);
+
+			//为创建按钮绑定事件，点击打开创建线索的模态窗口
+			$("#addBtn").click(function (){
+
+				var loginAct = "${user.loginAct}";
+
+				$("#create-PlanLoginAct").val(loginAct);
+
+				$("#createPlanModal").modal("show");
+			})
+
+			//为保存按钮绑定事件，点击将已经填写好的数据保存到数据库中
+			$("#saveBtn").click(function (){
+
+				$.ajax({
+
+					url:"workbench/plan/savePlan.do",
+					data :{
+
+						"loginAct":$.trim($("#create-PlanLoginAct").val()),
+						"name":$.trim($("#create-PlanName").val()),
+						"group":$.trim($("#create-PlanGroup").val()),
+						"startDate":$.trim($("#create-PlanStartDate").val()),
+						"endDate":$.trim($("#create-PlanEndDate").val()),
+						"description":$.trim($("#create-PlanDescription").val()),
+
+					},
+					type:"post",
+					dataType : "json",
+					success :function (data){
+						if (data.success){
+							pageList(1,10);
+							$("#createPlanModal").modal("hide");
+						}else {
+							alert("保存失败")
+						}
+					}
+				})
+			})
+
+			//为搜索按钮绑定事件，点击查询
+			$("#searchBtn").click(function (){
+				//先把搜索框中的信息保存到隐藏域中
+				$("#hidden-PlanName").val($.trim($("#search-PlanName").val()));
+				$("#hidden-PlanLoginAct").val($.trim($("#search-PlanLoginAct").val()));
+				$("#hidden-PlanGroup").val($.trim($("#search-PlanGroup").val()));
+				$("#hidden-PlanStartDate").val($.trim($("#search-PlanStartDate").val()));
+				$("#hidden-PlanEndDate").val($.trim($("#search-PlanEndDate").val()));
+				$("#hidden-PlanDescription").val($.trim($("#search-PlanDescription").val()));
+
+				pageList(1,10);
+			})
+
+			$(".start_time").datetimepicker({
+				//格式化：年月日时分秒
+				format: 'yyyy-mm-dd hh:ii',
+				//	选择后自动关闭
+				autoclose: true,
+				//  最精确的时间   1小时
+				minView:1,
+				//	语言
+				language: 'zh-CN',
+				//	显示今天按钮
+				todayBtn: true,
+			}).on('changeDate', function (e) {
+				var startDate = $('.start_time').val();
+				$(".end_time").datetimepicker('setStartDate', startDate);
+				$(".start_time").datetimepicker('hide');
+			});
+			$('.end_time').datetimepicker({
+				format: 'yyyy-mm-dd hh:ii',
+				autoclose: true,
+				//  最精确的时间   1小时
+				minView:1,
+				language: 'zh-CN',
+				todayBtn: true,
+			}).on('changeDate', function (e) {
+				var returnDate = $(".end_time").val();
+				$(".start_time").datetimepicker('setReturnDate', returnDate);
+				$(".end_time").datetimepicker('hide');
+			});
+
+			//为selectBox选择框绑定事件，点击全选下面的选择框
+			$("#selectBox").click(function (){
+				$("input[name = subSelectBox]").prop("checked",this.checked);
+			})
+
+			$("#tbodyContext").on("click",$("input[name = subSelectBox]"),function (){
+
+				$("#selectBox").prop("checked",$("input[name = subSelectBox]").length == $("input[name = subSelectBox]:checked").length);
+			})
+
+			//为”修改“按钮绑定事件，点击打开模态窗口
+			$("#updateBtn").click(function (){
+
+				//修改时应该只能修改选中的唯一一个复选框的信息
+				var $xz = $("input[name = subSelectBox]:checked");
+				if ($xz.length == 0){
+					alert("请选择您想修改的活动")
+				}else if ($xz.length > 1){
+					alert("不能同时修改多个活动的信息")
+				}else {
+
+					$.ajax({
+
+						url:"workbench/plan/getPlan.do",
+						data :{
+							"id": $xz.val(),
+						},
+						type:"get",
+						dataType : "json",
+						success :function (data){
+
+							$("#edit-PlanLoginAct").val(data.loginAct);
+							$("#edit-PlanName").val(data.name);
+							$("#edit-PlanGroup").val(data.group);
+							$("#edit-PlanStartDate").val(data.startDate);
+							$("#edit-PlanEndDate").val(data.endDate);
+							$("#edit-PlanDescription").val(data.description);
+						}
+					})
+
+					$("#editPlanModal").modal("show");
+				}
+			})
+
+			//为更新按钮绑定事件，点击将已经修改的信息保存到数据库中
+			$("#edit-updateBtn").click(function (){
+
+				var $xz = $("input[name = subSelectBox]:checked");
+				$.ajax({
+
+					url:"workbench/plan/updatePlan.do",
+					data :{
+						"id":$xz.val(),
+						"loginAct":$.trim($("#edit-PlanLoginAct").val()),
+						"name":$.trim($("#edit-PlanName").val()),
+						"group": $.trim($("#edit-PlanGroup").val()),
+						"startDate":$.trim($("#edit-PlanStartDate").val()),
+						"endDate":$.trim($("#edit-PlanEndDate").val()),
+						"description":$.trim($("#edit-PlanDescription").val())
+					},
+					type:"post",
+					dataType : "json",
+					success :function (data){
+
+						//传过来的数据success
+						if (data.success){
+							$("#ideaEditForm")[0].reset();
+
+							$("#editPlanModal").modal("hide");
+
+							pageList($("#planPage").bs_pagination('getOption', 'currentPage')
+									,$("#planPage").bs_pagination('getOption', 'rowsPerPage'));
+						}else {
+							alert("保存失败")
+						}
+					}
+				})
+			})
+
+			//为delete按钮绑定事件，点击按复选框（subSelectBox）的checked状态删除查询数据
+			$("#deleteBtn").click(function (){
+
+				//找到复选框中所有checked的jquery对象
+				var $xz = $("input[name = subSelectBox]:checked");
+
+				if ($xz.length == 0){
+					alert("请选择需要删除的记录");
+				}else {
+
+					var param = "";
+
+					//遍历$xz中的每一个dom对象遍历出来，取其value值》取得需要删除的记录的id
+					for (var i = 0; i < $xz.length; i++) {
+
+						param += "id=" + $($xz[i]).val();
+						if (i < $xz.length - 1){
+							param += "&"
+						}
+					}
+
+					if (confirm("是否打算删除该数据")){
+						$.ajax({
+
+							url:"workbench/plan/deletePlan.do",
+							data : param,
+							type:"post",
+							dataType : "json",
+							success :function (data){
+								//需要传递出来的信息：success：true or false
+								if (data.success){
+									//删除成功后刷新当前页
+
+									pageList($("#planPage").bs_pagination('getOption', 'currentPage')
+											,$("#planPage").bs_pagination('getOption', 'rowsPerPage'));
+								}else {
+									alert("数据删除失败")
+								}
+							}
+						})
+					}
+				}
+			})
+
+		});
+
+		function pageList(pageNo,pageSize){
+
+			//搜索前将隐藏域中的值赋给搜索框
+			$("#search-PlanName").val($.trim($("#hidden-PlanName").val()));
+			$("#search-PlanLoginAct").val($.trim($("#hidden-PlanLoginAct").val()));
+			$("#search-PlanGroup").val($.trim($("#hidden-PlanGroup").val()));
+			$("#search-PlanStartDate").val($.trim($("#hidden-PlanStartDate").val()));
+			$("#search-PlanEndDate").val($.trim($("#hidden-PlanEndDate").val()));
+			$("#search-PlanDescription").val($.trim($("#hidden-PlanDescription").val()));
+
+			$.ajax({
+
+				url:"workbench/plan/getPlanList.do",
+				data :{
+					//传参--做分页的相关参数
+					"pageNo":pageNo,
+					"pageSize":pageSize,
+					//传参--线索列表
+					"name":$.trim($("#search-PlanName").val()),
+					"loginAct":$.trim($("#search-PlanLoginAct").val()),
+					"group":$.trim($("#search-PlanGroup").val()),
+					"startDate":$.trim($("#search-PlanStartDate").val()),
+					"endDate":$.trim($("#search-PlanEndDate").val()),
+					"description":$.trim($("#search-PlanDescription").val()),
+				},
+				type:"post",
+				dataType : "json",
+				success :function (data){
+
+					/**
+					 * 前端需要的参数：市场活动信息列表
+					 * {{市场活动1}，{2}，{3}}
+					 * 一会分页插件需要的，查询出来的总记录数
+					 * {“total”：100}
+					 * {“total：100，“datalist”：[{市场活动1}，{2}，{3}]}
+					 */
+
+					var html ="";
+
+					$.each(data.list,function (i,n){
+						html +='<tr name="'+n.group+'">';
+						html +='<td><input value="'+n.id+'" name="subSelectBox" type="checkbox"/></td>';
+						html +='<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/plan/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
+						html +='<td>'+n.loginAct+'</td>';
+						html +='<td>'+n.group+'</td>';
+						html +='<td>'+n.description+'</td>';
+						html +='<td>'+n.startDate+'</td>';
+						html +='<td>'+n.endDate+'</td>';
+						html +='</tr>';
+					})
+					$("#tbodyContext").html(html);
+
+					$('tr[name="重要且紧急的计划"]').addClass("bg-danger");
+					$('tr[name="重要但不紧急的计划"]').addClass("bg-info");
+					$('tr[name="不重要但紧急的计划"]').addClass("bg-warning");
+
+					//计算总页数
+					var totalPages = data.total%pageSize ==0?data.total/pageSize:data.total/pageSize+1;
+
+					//分页组件
+					$("#planPage").bs_pagination({
+						currentPage: pageNo, // 页码
+						rowsPerPage: pageSize, // 每页显示的记录条数
+						maxRowsPerPage: 20, // 每页最多显示的记录条数
+						totalPages: totalPages, // 总页数》需要计算
+						totalRows: data.total, // 总记录条数
+
+						visiblePageLinks: 3, // 显示几个卡片
+
+						showGoToPage: true,
+						showRowsPerPage: true,
+						showRowsInfo: true,
+						showRowsDefaultInfo: true,
+
+						//回调函数在点击分页组件的时候触发
+						onChangePage : function(event, data){
+							pageList(data.currentPage , data.rowsPerPage);
+						}
+					});
+				}
+			})
+		}
+
+	</script>
 
 </body>
 </html>

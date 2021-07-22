@@ -1,6 +1,5 @@
 package com.liraryyi.labRecordProject.settings.controller;
 
-import com.alibaba.druid.stat.TableStat;
 import com.liraryyi.labRecordProject.exception.LoginException;
 import com.liraryyi.labRecordProject.settings.domain.User;
 import com.liraryyi.labRecordProject.settings.domain.VerificationCode;
@@ -15,6 +14,7 @@ import lombok.Setter;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -127,6 +127,8 @@ public class UserController {
 
         //重发邮件需要考虑的事，更改验证码表，更换一个新的验证码并更新过期时间，然后发送邮件,成功后返回信息
         ModelAndView mv = new ModelAndView();
+        System.out.println("start");
+        System.out.println(userId);
 
         Map<String,String> map = userService.reSendmail(userId);
 
@@ -177,9 +179,20 @@ public class UserController {
         //根据id找到user对象，并加入全局作用域
         User user = userService.getUser(id);
 
-        //将用户加入到会话作用域对象(HttpSession),更新一下
+        //将用户加入到全局作用域,更新一下
         request.getSession().setAttribute("user",user);
 
         PrintJson.printJsonObj(response,map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/user/getUserId.do")
+    public User getUserByLoginAct(HttpServletRequest request){
+
+        String loginAct = request.getParameter("loginAct");
+
+        User user = userService.getUserByLoginAct(loginAct);
+
+        return user;
     }
 }

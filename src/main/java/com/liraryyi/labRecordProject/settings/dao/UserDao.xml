@@ -63,4 +63,5 @@
     <update id="updatePath">
         update tbl_user set path=#{path} where id=#{id}
     </update>
+
 </mapper>

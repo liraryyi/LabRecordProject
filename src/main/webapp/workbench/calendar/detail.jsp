@@ -21,294 +21,6 @@ request.getServerPort() + request.getContextPath() + "/";
 		}
 	</style>
 
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-	<!--颜色选择器插件-->
-	<script type="text/javascript" src="jquery/bootStrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-
-<script type="text/javascript">
-
-	//默认情况下取消和保存按钮是隐藏的
-	var cancelAndSaveBtnDefault = true;
-	
-	$(function(){
-		$("#remark").focus(function(){
-			if(cancelAndSaveBtnDefault){
-				//设置remarkDiv的高度为130px
-				$("#remarkDiv").css("height","130px");
-				//显示
-				$("#cancelAndSaveBtn").show("2000");
-				cancelAndSaveBtnDefault = false;
-			}
-		});
-		
-		$("#cancelBtn").click(function(){
-			//显示
-			$("#cancelAndSaveBtn").hide();
-			//设置remarkDiv的高度为130px
-			$("#remarkDiv").css("height","90px");
-			cancelAndSaveBtnDefault = true;
-		});
-		
-		$(".remarkDiv").mouseover(function(){
-			$(this).children("div").children("div").show();
-		});
-		
-		$(".remarkDiv").mouseout(function(){
-			$(this).children("div").children("div").hide();
-		});
-		
-		$(".myHref").mouseover(function(){
-			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
-			$(this).children("span").css("color","#E6E6E6");
-		});
-
-		showCalendar_remark();
-
-		//使用鼠标操作动态滑入滑出，展示删除和修改按钮
-		$("#remarkBody").on("mouseover",".remarkDiv",function(){
-			$(this).children("div").children("div").show();
-		})
-		$("#remarkBody").on("mouseout",".remarkDiv",function(){
-			$(this).children("div").children("div").hide();
-		})
-
-		//点击确定保存Remark信息
-		$("#saveRemarkBtn").click(function (){
-			$.ajax({
-
-				url:"workbench/calendar_remark/saveRemarkCalendar.do",
-				data :{
-					"noteContext": $("#remark").val(),
-					"calendarId": "${calendar.id}",
-					"headPath":"${user.path}"
-				},
-				type:"post",
-				dataType : "json",
-				success :function (data){
-					if (data.success){
-
-						showCalendar_remark();
-						$("#remark").val("");
-					}else {
-						alert("保存失败")
-					}
-				}
-			})
-		})
-
-		//点击更新 保存Remark信息
-		$("#updateRemarkBtn").click(function (){
-
-			$.ajax({
-
-				url:"workbench/calendar_remark/updateRemarkCalendar.do",
-				data :{
-					"id":$("#remarkId").val(),
-					"noteContent":$("#noteContent").val()
-				},
-				type:"post",
-				dataType : "json",
-				success :function (data){
-					if (data.success) {
-						showCalendar_remark()
-
-						$("#editRemarkModal").modal("hide");
-					}else {
-						alert("更新失败");
-					}
-				}
-			})
-		})
-
-		//为编辑按钮绑定事件，点击打开模态窗口
-		$("#updateCalendarBtn").click(function (){
-
-				$.ajax({
-
-					url:"workbench/calendar/getCalendar.do",
-					data :{
-						"id": "${calendar.id}"
-					},
-					type:"get",
-					dataType : "json",
-					success :function (data){
-
-						$("#edit-calendarOwner").val(data.loginAct);
-						$("#edit-calendarName").val(data.name);
-						$("#edit-startDate").val(data.startDate);
-						$("#edit-endDate").val(data.endDate);
-						$("#edit-colordemo").val(data.color);
-						$("#edit-colordemo").css('background-color',data.color);
-						$("#edit-color").text(data.color);
-						$("#edit-url").val(data.url);
-						$("#edit-description").val(data.description);
-					}
-				})
-
-				$("#editCalendarModal").modal("show");
-		})
-
-		//为更新按钮绑定事件，点击将已经修改的信息保存到数据库中
-		$("#edit-updateBtn").click(function (){
-
-			$.ajax({
-
-				url:"workbench/calendar/updateCalendar.do",
-				data :{
-					"id":"${calendar.id}",
-					"loginAct": $.trim($("#edit-calendarOwner").val()),
-					"name": $.trim($("#edit-calendarName").val()),
-					"startDate": $.trim($("#edit-startDate").val()),
-					"endDate":$.trim($("#edit-endDate").val()),
-					"color":$.trim($("#edit-color").val()),
-					"url":$.trim($("#edit-url").val()),
-					"description":$.trim($("#edit-description").val())
-				},
-				type:"post",
-				dataType : "json",
-				success :function (data){
-
-					//传过来的数据success
-					if (data.success){
-						$("#CalendarEditForm")[0].reset();
-
-						$("#editCalendarModal").modal("hide");
-
-						location.reload(true);
-					}else {
-						alert("保存失败")
-					}
-				}
-			})
-		})
-
-		$('#edit-colordemo').colorpicker({
-			preferredFormat : "hex" ,
-			showAlpha: false
-		});
-		// 添加change事件 改变背景色
-		$('#edit-colordemo').on('change', function (event) {
-			$('#edit-colordemo').css('background-color', event.color.toHexString()).val('');
-			$("#edit-color").text(event.color.toHexString());
-			$("#edit-colordemo").val(event.color.toHexString());
-		});
-
-		$(".start_time").datetimepicker({
-			//格式化：年月日时分秒
-			format: 'yyyy-mm-dd hh:ii',
-			//	选择后自动关闭
-			autoclose: true,
-			//	分钟的步长
-			minuteStep: 1,
-			//	语言
-			language: 'zh-CN',
-			//	显示今天按钮
-			todayBtn: true,
-			//	层级
-			bootcssVer: 3,
-		}).on('changeDate', function (e) {
-			var startDate = $('.start_time').val();
-			$(".end_time").datetimepicker('setStartDate', startDate);
-			$(".start_time").datetimepicker('hide');
-		});
-		$('.end_time').datetimepicker({
-			format: 'yyyy-mm-dd hh:ii',
-			autoclose: true,
-			minuteStep: 1,
-			language: 'zh-CN',
-			todayBtn: true,
-			bootcssVer: 3,
-		}).on('changeDate', function (e) {
-			var returnDate = $(".end_time").val();
-			$(".start_time").datetimepicker('setReturnDate', returnDate);
-			$(".end_time").datetimepicker('hide');
-		});
-	});
-
-	//刷新日历活动备注列表
-	function showCalendar_remark(){
-		$.ajax({
-
-			url:"workbench/calendar_remark/getRemarkCalendarList.do",
-			data :{
-				"calendarId": "${calendar.id}"
-			},
-			type:"get",
-			dataType : "json",
-			success :function (data){
-
-				/**
-				 * 分析一下，这里前端需要的参数，传过来的就是Activity_remark对象list
-				 * data[{1},{2},{3}]
-				 */
-				var html ="";
-
-				$.each(data,function (i,n){
-					/*
-                    javascript:void(0) 将超链接禁用，只能以触发事件的形式操作
-                     */
-					html += '<div class="remarkDiv" style="height: 60px;">';
-					html += '<img alt="" src="'+n.headPath+'" style="width: 30px; height:30px;">';
-					html += '<div style="position: relative; top: -40px; left: 40px;" >';
-					html += '<h5>'+n.noteContent+'</h5>';
-					html += '<font color="gray">日历计划</font> <font color="gray">-</font> <b>${calendar.name}</b> <small style="color: gray;"> '+(n.editFlag==1?n.editTime:n.createTime)+' 由'+(n.editFlag==1?n.editBy:n.createBy)+'</small>';
-					html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-					html += '<a class="myHref" href="javascript:void(0);" onclick="openUpdateRemark(\''+n.id+'\',\''+n.noteContent+'\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
-					html += '&nbsp;&nbsp;&nbsp;&nbsp;';
-					html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+n.id+'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
-					html += '</div>';
-					html += '</div>';
-					html += '</div>';
-				})
-
-				$("#calendarRemarkDiv").html(html);
-			}
-		})
-	}
-
-	//删除选择的备注信息表
-	function deleteRemark(id){
-
-		if (confirm("确定要删除吗？")) {
-			$.ajax({
-
-				url: "workbench/calendar_remark/deleteRemarkCalendar.do",
-				data: {
-					"id": id
-				},
-				type: "post",
-				dataType: "json",
-				success: function (data) {
-					if (data.success) {
-						showCalendar_remark();
-					}else {
-						alert("删除失败")
-					}
-				}
-			})
-		}
-	}
-
-	//更新选择的备注信息表
-	function openUpdateRemark(id,noteContent){
-
-		$("#remarkId").val(id);
-
-		$("#noteContent").val(noteContent);
-
-		//点击后打开修改市场活动备注的模态窗口
-		$("#editRemarkModal").modal("show");
-
-	}
-	
-</script>
-
 </head>
 <body>
 
@@ -409,23 +121,23 @@ request.getServerPort() + request.getContextPath() + "/";
 	</div>
 
 	<!-- 返回按钮 -->
-	<div style="position: relative; top: 35px; left: 10px;">
+	<div style="position: relative; top: 35px; left: 1%;">
 		<a href="javascript:void(0);" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left" style="font-size: 20px; color: #DDDDDD"></span></a>
 	</div>
 	
 	<!-- 大标题 -->
-	<div style="position: relative; left: 250px; top: -30px;">
+	<div style="position: relative; left: 15%; top: -30px;">
 		<div class="page-header">
 			<h3>${calendar.name} &nbsp;<small>${calendar.startDate}&nbsp; ~ ${calendar.endDate}&nbsp;</small></h3>
 		</div>
-		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
+		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 55%;">
 			<button type="button" class="btn btn-default" id="updateCalendarBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
 	<!-- 详细信息 -->
-	<div style="position: relative; left: 250px; top: -70px;">
+	<div style="position: relative; left: 15%; top: -70px;">
 		<div style="position: relative; left: 40px; height: 30px;">
 			<div style="width: 300px; color: gray;">用户名 &nbsp;</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${calendar.loginAct} &nbsp;</b></div>
@@ -473,7 +185,7 @@ request.getServerPort() + request.getContextPath() + "/";
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; left: 250px; top: 30px;" id="remarkBody">
+	<div style="position: relative; left: 15%; top: 30px;" id="remarkBody">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
@@ -491,6 +203,319 @@ request.getServerPort() + request.getContextPath() + "/";
 		</div>
 	</div>
 	<div style="height: 200px;"></div>
+
+
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<!--颜色选择器插件-->
+	<script type="text/javascript" src="jquery/bootStrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+
+	<script type="text/javascript">
+
+		//默认情况下取消和保存按钮是隐藏的
+		var cancelAndSaveBtnDefault = true;
+
+		$(function(){
+			$("#remark").focus(function(){
+				if(cancelAndSaveBtnDefault){
+					//设置remarkDiv的高度为130px
+					$("#remarkDiv").css("height","130px");
+					//显示
+					$("#cancelAndSaveBtn").show("2000");
+					cancelAndSaveBtnDefault = false;
+				}
+			});
+
+			$("#cancelBtn").click(function(){
+				//显示
+				$("#cancelAndSaveBtn").hide();
+				//设置remarkDiv的高度为130px
+				$("#remarkDiv").css("height","90px");
+				cancelAndSaveBtnDefault = true;
+			});
+
+			$(".remarkDiv").mouseover(function(){
+				$(this).children("div").children("div").show();
+			});
+
+			$(".remarkDiv").mouseout(function(){
+				$(this).children("div").children("div").hide();
+			});
+
+			$(".myHref").mouseover(function(){
+				$(this).children("span").css("color","red");
+			});
+
+			$(".myHref").mouseout(function(){
+				$(this).children("span").css("color","#E6E6E6");
+			});
+
+			showCalendar_remark();
+
+			//使用鼠标操作动态滑入滑出，展示删除和修改按钮
+			$("#remarkBody").on("mouseover",".remarkDiv",function(){
+				$(this).children("div").children("div").show();
+			})
+			$("#remarkBody").on("mouseout",".remarkDiv",function(){
+				$(this).children("div").children("div").hide();
+			})
+
+			//点击确定保存Remark信息
+			$("#saveRemarkBtn").click(function (){
+				$.ajax({
+
+					url:"workbench/calendar_remark/saveRemarkCalendar.do",
+					data :{
+						"noteContext": $("#remark").val(),
+						"calendarId": "${calendar.id}",
+						"headPath":"${user.path}"
+					},
+					type:"post",
+					dataType : "json",
+					success :function (data){
+						if (data.success){
+
+							showCalendar_remark();
+							$("#remark").val("");
+						}else {
+							alert("保存失败")
+						}
+					}
+				})
+			})
+
+			//点击更新 保存Remark信息
+			$("#updateRemarkBtn").click(function (){
+
+				$.ajax({
+
+					url:"workbench/calendar_remark/updateRemarkCalendar.do",
+					data :{
+						"id":$("#remarkId").val(),
+						"noteContent":$("#noteContent").val()
+					},
+					type:"post",
+					dataType : "json",
+					success :function (data){
+						if (data.success) {
+							showCalendar_remark()
+
+							$("#editRemarkModal").modal("hide");
+						}else {
+							alert("更新失败");
+						}
+					}
+				})
+			})
+
+			//为编辑按钮绑定事件，点击打开模态窗口
+			$("#updateCalendarBtn").click(function (){
+
+				$.ajax({
+
+					url:"workbench/calendar/getCalendar.do",
+					data :{
+						"id": "${calendar.id}"
+					},
+					type:"get",
+					dataType : "json",
+					success :function (data){
+
+						$("#edit-calendarOwner").val(data.loginAct);
+						$("#edit-calendarName").val(data.name);
+						$("#edit-startDate").val(data.startDate);
+						$("#edit-endDate").val(data.endDate);
+						$("#edit-colordemo").val(data.color);
+						$("#edit-colordemo").css('background-color',data.color);
+						$("#edit-color").text(data.color);
+						$("#edit-url").val(data.url);
+						$("#edit-description").val(data.description);
+					}
+				})
+
+				$("#editCalendarModal").modal("show");
+			})
+
+			//为更新按钮绑定事件，点击将已经修改的信息保存到数据库中
+			$("#edit-updateBtn").click(function (){
+
+				$.ajax({
+
+					url:"workbench/calendar/updateCalendar.do",
+					data :{
+						"id":"${calendar.id}",
+						"loginAct": $.trim($("#edit-calendarOwner").val()),
+						"name": $.trim($("#edit-calendarName").val()),
+						"startDate": $.trim($("#edit-startDate").val()),
+						"endDate":$.trim($("#edit-endDate").val()),
+						"color":$.trim($("#edit-color").val()),
+						"url":$.trim($("#edit-url").val()),
+						"description":$.trim($("#edit-description").val())
+					},
+					type:"post",
+					dataType : "json",
+					success :function (data){
+
+						//传过来的数据success
+						if (data.success){
+							$("#CalendarEditForm")[0].reset();
+
+							$("#editCalendarModal").modal("hide");
+
+							location.reload(true);
+						}else {
+							alert("保存失败")
+						}
+					}
+				})
+			})
+
+			//为删除按钮绑定事件，点击将该信息删除
+			$("#deleteBtn").click(function (){
+
+				if (confirm("确定删除该条记录？")){
+
+					$.ajax({
+
+						url:"workbench/calendar/deleteCalendarById.do",
+						data :{
+							"id":"${calendar.id}"
+						},
+						type:"post",
+						dataType : "json",
+						success :function (data){
+
+							if (data.success){
+								window.location.href="workbench/calendar/index.jsp"
+							}else {
+								alert("删除失败")
+							}
+
+						}
+					})
+				}
+			})
+
+			$('#edit-colordemo').colorpicker({
+				preferredFormat : "hex" ,
+				showAlpha: false
+			});
+			// 添加change事件 改变背景色
+			$('#edit-colordemo').on('change', function (event) {
+				$('#edit-colordemo').css('background-color', event.color.toHexString()).val('');
+				$("#edit-color").text(event.color.toHexString());
+				$("#edit-colordemo").val(event.color.toHexString());
+			});
+
+			$(".start_time").datetimepicker({
+				//格式化：年月日时分秒
+				format: 'yyyy-mm-dd hh:ii',
+				//	选择后自动关闭
+				autoclose: true,
+				//  最精确的时间   1小时
+				minView:1,
+				//	语言
+				language: 'zh-CN',
+				//	显示今天按钮
+				todayBtn: true,
+			}).on('changeDate', function (e) {
+				var startDate = $('.start_time').val();
+				$(".end_time").datetimepicker('setStartDate', startDate);
+				$(".start_time").datetimepicker('hide');
+			});
+			$('.end_time').datetimepicker({
+				format: 'yyyy-mm-dd hh:ii',
+				autoclose: true,
+				//  最精确的时间   1小时
+				minView:1,
+				language: 'zh-CN',
+				todayBtn: true,
+			}).on('changeDate', function (e) {
+				var returnDate = $(".end_time").val();
+				$(".start_time").datetimepicker('setReturnDate', returnDate);
+				$(".end_time").datetimepicker('hide');
+			});
+		});
+
+		//刷新日历活动备注列表
+		function showCalendar_remark(){
+			$.ajax({
+
+				url:"workbench/calendar_remark/getRemarkCalendarList.do",
+				data :{
+					"calendarId": "${calendar.id}"
+				},
+				type:"get",
+				dataType : "json",
+				success :function (data){
+
+					/**
+					 * 分析一下，这里前端需要的参数，传过来的就是Activity_remark对象list
+					 * data[{1},{2},{3}]
+					 */
+					var html ="";
+
+					$.each(data,function (i,n){
+						/*
+                        javascript:void(0) 将超链接禁用，只能以触发事件的形式操作
+                         */
+						html += '<div class="remarkDiv" style="height: 60px;">';
+						html += '<img alt="" src="'+n.headPath+'" style="width: 30px; height:30px;">';
+						html += '<div style="position: relative; top: -40px; left: 40px;" >';
+						html += '<h5>'+n.noteContent+'</h5>';
+						html += '<font color="gray">日历计划</font> <font color="gray">-</font> <b>${calendar.name}</b> <small style="color: gray;"> '+(n.editFlag==1?n.editTime:n.createTime)+' 由'+(n.editFlag==1?n.editBy:n.createBy)+'</small>';
+						html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+						html += '<a class="myHref" href="javascript:void(0);" onclick="openUpdateRemark(\''+n.id+'\',\''+n.noteContent+'\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+						html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+						html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+n.id+'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+						html += '</div>';
+						html += '</div>';
+						html += '</div>';
+					})
+
+					$("#calendarRemarkDiv").html(html);
+				}
+			})
+		}
+
+		//删除选择的备注信息表
+		function deleteRemark(id){
+
+			if (confirm("确定要删除吗？")) {
+				$.ajax({
+
+					url: "workbench/calendar_remark/deleteRemarkCalendar.do",
+					data: {
+						"id": id
+					},
+					type: "post",
+					dataType: "json",
+					success: function (data) {
+						if (data.success) {
+							showCalendar_remark();
+						}else {
+							alert("删除失败")
+						}
+					}
+				})
+			}
+		}
+
+		//更新选择的备注信息表
+		function openUpdateRemark(id,noteContent){
+
+			$("#remarkId").val(id);
+
+			$("#noteContent").val(noteContent);
+
+			//点击后打开修改市场活动备注的模态窗口
+			$("#editRemarkModal").modal("show");
+
+		}
+
+	</script>
 
 </body>
 </html>

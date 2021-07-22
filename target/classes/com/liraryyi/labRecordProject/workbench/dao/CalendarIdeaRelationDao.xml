@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liraryyi.labRecordProject.workbench.dao.CalendarIdeaRelationDao">
+
+    <insert id="insertCIR">
+        insert into tbl_calendar_idea_relation (
+        id,
+        calendarId,
+        ideaId
+        ) values (
+        #{id},
+        #{calendarId},
+        #{ideaId}
+        )
+    </insert>
+
+    <delete id="deleteById">
+        delete from tbl_calendar_idea_relation where id=#{id}
+    </delete>
+
+    <delete id="deleteByCalendarId">
+        delete from tbl_calendar_idea_relation where calendarId=#{calendarId}
+    </delete>
+
+    <delete id="deleteByIdeaId">
+        delete from tbl_calendar_idea_relation where ideaId=#{ideaId}
+    </delete>
+</mapper>

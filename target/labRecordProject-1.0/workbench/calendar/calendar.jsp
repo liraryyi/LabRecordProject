@@ -37,10 +37,11 @@
 </head>
 
 <body>
-    <h1 style="font-family: 'Yanone Kaffeesatz', sans-serif;
+    <h1 style="
 			text-align: center;
-			font-size: 50px;
-			text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);">my calendar</h1>
+			font-size: 35px;
+			text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);">my calendar
+      <small>&nbsp;在calendar中创建的日历活动会显示在这里</small></h1>
     <!--生成日历的div-->
     <div class="monthly" id="mycalendar"></div>
 

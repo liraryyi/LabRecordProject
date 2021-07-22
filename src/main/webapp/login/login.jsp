@@ -14,6 +14,8 @@ request.getServerPort() + request.getContextPath() + "/";
 	<script type="text/javascript">
 		$(function (){
 
+			$("#reSendMail").hide();
+
 			//设置当前页面始终为顶层窗口
 			if (window.top != window){
 				window.top.location = window.location;
@@ -35,6 +37,27 @@ request.getServerPort() + request.getContextPath() + "/";
 				if (event.keyCode ==13){
 					login();
 				}
+			})
+
+			//点击发送邮件按钮，发送激活邮件
+			$("#reSendMail").click(function (){
+
+				var loginAct = $.trim($("#loginAct").val());
+
+				//根据loginAct拿到userId
+				$.ajax({
+
+					url:"settings/user/getUserId.do",
+					data :{
+						"loginAct":loginAct
+					},
+					type:"get",
+					dataType : "json",
+					success :function (data){
+
+						window.location.href = "settings/user/repeatedMail.do?userId="+data.id+"";
+					}
+				})
 			})
 		})
 
@@ -68,20 +91,17 @@ request.getServerPort() + request.getContextPath() + "/";
 					 * {"success":true/false  , "msg":"错误的种类"}
 					 */
 					if (data.success){
-						window.location.href = "workbench/index.html";
+						window.location.href = "workbench/index.jsp";
 					} else {
 						$("#msg").html(data.msg);
+
+						var msg = $("#msg").html();
+						if (msg.match("激活")){
+							$("#reSendMail").show();
+						}
 					}
 				}
 			})
-		}
-
-		//如果账号没有激活，点击重新激活
-		function show(){
-			var msg = $("#msg").val();
-			if (msg.match("激活")){
-				$("#reSendMail").css("display","inline");
-			}
 		}
 
 	</script>
@@ -111,9 +131,16 @@ request.getServerPort() + request.getContextPath() + "/";
 					<button type="button" id="submitBtn" class="btn btn-primary btn-lg btn-block"  style="width: 350px; position: relative;top: 45px;">登录</button>
 				</div>
 			</form>
-			<div class="page-header" style="width: 80px; height: 15px; position: relative ; top: 20px ;left: 250px">
+			<%--<button type="button" class="btn-primary btn-lg " id="reSendMail">发送邮件</button>
+			<div class="page-header" style="width: 80px; height: 15px; position: relative ; top: 20px ;left: 50px">
 				<button type="button" class="btn-primary btn-lg btn-block" onclick="window.location.href = 'login/register.jsp'">注册</button>
-			</div>
+			</div>--%>
+			<table class="page-header" style="width: 300px; height: 15px; position: relative ; top: 20px ;left: 0px">
+				<tr>
+					<td width="50%"><button type="button" class="btn-primary btn-lg btn-block" id="reSendMail">发送邮件</button></td>
+					<td width="50%"><button type="button" class="btn-primary btn-lg btn-block" onclick="window.location.href = 'login/register.jsp'">注册</button></td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </body>

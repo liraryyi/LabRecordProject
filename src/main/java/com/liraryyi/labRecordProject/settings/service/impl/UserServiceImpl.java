@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService {
                     msg = "邮件发送中，请注意查收，浏览器将在5秒后自动跳转";
                     //创建成功的同时发送一个邮件，提示用户激活
                     String mailText = "<html><head></head><body><h1>这是一封激活邮件,激活请点击以下链接</h1><h3>" +
-                            "<a href='http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code="
-                            + vc.getCode() + "'>http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code=" + vc.getCode()
+                            "<a href='http://118.31.36.141:8080/labRecordProject_warout/settings/user/activate.do?code="
+                            + vc.getCode() + "'>http://118.31.36.141:8080/labRecordProject_warout/settings/user/activate.do?code=" + vc.getCode()
                             + "</href></h3></body></html>";
                     //使用多线程执行邮件的发送
                     Thread threadSendMail = new Thread() {
@@ -176,7 +176,6 @@ public class UserServiceImpl implements UserService {
         Map<String,String> map = new HashMap<>();
         //根据code找到验证码信息,更新过期时间以及验证码
         String msg = "";
-        System.out.println(userId);
         VerificationCode verificationCode = verificationCodeDao.selectByUserId(userId);
 
         String expiredTime = DateTimeUtil.getExpiredTime();
@@ -198,8 +197,8 @@ public class UserServiceImpl implements UserService {
             msg ="邮件正在发送，请注意查收邮件，注册有效时间为20分钟";
             //重发邮件
             String mailText = "<html><head></head><body><h1>这是一封激活邮件,激活请点击以下链接</h1><h3>" +
-                    "<a href='http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code="
-                    + verificationCode.getCode() + "'>http://localhost:8080/labRecordProject_war_exploded/settings/user/activate.do?code=" + verificationCode.getCode()
+                    "<a href='http://118.31.36.141:8080/labRecordProject_warout/settings/user/activate.do?code="
+                    + verificationCode.getCode() + "'>http://118.31.36.141:8080/labRecordProject_warout/settings/user/activate.do?code=" + verificationCode.getCode()
                     + "</href></h3></body></html>";
             //使用多线程执行邮件的发送
             Thread threadSendMail = new Thread() {
@@ -296,5 +295,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String id) {
         return userDao.selectUserByuserId(id);
+    }
+
+    @Override
+    public User getUserByLoginAct(String loginAct) {
+        return userDao.selectUser_ByLoginAck(loginAct);
     }
 }

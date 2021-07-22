@@ -9,7 +9,7 @@
                name:实体类的包名
         -->
         <package name="com.liraryyi.labRecordProject.settings.domain"/>
-        <package name="com.liraryyi.labRecordProject.calendar.domain"/>
+        <package name="com.liraryyi.labRecordProject.workbench.domain"/>
     </typeAliases>
 
     <!--sql映射文件的位置-->
@@ -22,6 +22,6 @@
               2、sql映射文件和Dao接口在同一目录
         -->
         <package name="com.liraryyi.labRecordProject.settings.dao"/>
-        <package name="com.liraryyi.labRecordProject.calendar.dao"/>
+        <package name="com.liraryyi.labRecordProject.workbench.dao"/>
     </mappers>
 </configuration>

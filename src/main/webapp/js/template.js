@@ -176,7 +176,7 @@ var sendPhoto = function(){
         url: 'settings/user/savePhoto.do', // 要上传的地址
         type: 'post',
         data: {
-            'id':"${user.id}",
+            'id':$("#hidden-userId").val(),
             'imgData': photo
         },
         dataType: 'json',

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="labRecordProject:warout">
+    <output-path>$PROJECT_DIR$/out/artifacts/labRecordProject_warout</output-path>
+    <root id="archive" name="labRecordProject_warout.war">
+      <element id="artifact" artifact-name="labRecordProject:war exploded" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/webapp" />
+    </root>
+  </artifact>
+</component>

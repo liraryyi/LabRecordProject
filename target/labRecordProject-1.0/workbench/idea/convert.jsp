@@ -47,7 +47,7 @@ request.getServerPort() + request.getContextPath() + "/";
 
 					"name":$.trim($("#planName").val()),
 					"loginAct":$("#planLoginAct").val(),
-					"group":$("#"),
+					"group":$("#planGroup").val(),
 					"startDate":$("#planStartDate").val(),
 					"endDate":$("#planEndDate").val(),
 					"description":$.trim($("#planDescription").val()),
@@ -77,14 +77,12 @@ request.getServerPort() + request.getContextPath() + "/";
 			format: 'yyyy-mm-dd hh:ii',
 			//	选择后自动关闭
 			autoclose: true,
-			//	分钟的步长
-			minuteStep: 1,
+			//  最精确的时间   1小时
+			minView:1,
 			//	语言
 			language: 'zh-CN',
 			//	显示今天按钮
 			todayBtn: true,
-			//	层级
-			bootcssVer: 3,
 		}).on('changeDate', function (e) {
 			var startDate = $('.start_time').val();
 			$(".end_time").datetimepicker('setStartDate', startDate);
@@ -93,10 +91,10 @@ request.getServerPort() + request.getContextPath() + "/";
 		$('.end_time').datetimepicker({
 			format: 'yyyy-mm-dd hh:ii',
 			autoclose: true,
-			minuteStep: 1,
+			//  最精确的时间   1小时
+			minView:1,
 			language: 'zh-CN',
 			todayBtn: true,
-			bootcssVer: 3,
 		}).on('changeDate', function (e) {
 			var returnDate = $(".end_time").val();
 			$(".start_time").datetimepicker('setReturnDate', returnDate);
@@ -119,7 +117,7 @@ request.getServerPort() + request.getContextPath() + "/";
 		<input type="text" class="form-control" id="planName">
 	</div>
 	<div class="form-group" style="width: 400px; position: relative; left: 20px;">
-		<label for="planGroup">计划名称</label>
+		<label for="planGroup">计划分组</label>
 		<input class="form-control" type="text" id="planGroup" list="planGroup-list">
 		<datalist id="planGroup-list">
 			<option></option>

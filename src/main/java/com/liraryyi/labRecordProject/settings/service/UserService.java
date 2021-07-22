@@ -21,4 +21,6 @@ public interface UserService {
     Map<String, Object> savePhoto(String id,String imgData,String path);
 
     User getUser(String id);
+
+    User getUserByLoginAct(String loginAct);
 }
